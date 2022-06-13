@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  minirt:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "devlope_space"
+    working_dir: "/miniRT"
+    #ports:
+    volumes:
+      - ./src:/miniRT/src
+      - ./include:/miniRT/include
+    stdin_open: true
+    tty: true

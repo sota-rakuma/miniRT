@@ -4,11 +4,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: "devlope_space"
-    working_dir: "/miniRT"
+    container_name: "develop_space"
+    working_dir: "/home/miniRT"
     #ports:
     volumes:
-      - ./src:/miniRT/src
-      - ./include:/miniRT/include
+      - ./src:/home/miniRT/src
+      - ./include:/home/miniRT/include
     stdin_open: true
     tty: true
+    command: bash -c "/home/miniRT/src/mlx_install.sh && /bin/bash -i"

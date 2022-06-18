@@ -5,7 +5,9 @@ NAME:=a.out
 INCLUDE:=../include
 SRC:=test.cpp \
 	Win.cpp \
-	Hook.cpp
+	Hook.cpp \
+	GraphicSystem.cpp \
+	ImageData.cpp
 MLX:=mlx_Linux
 MLX_DIR:=minilibx-linux
 LIBS_DIR:=/usr/lib

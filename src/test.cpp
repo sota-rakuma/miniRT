@@ -12,15 +12,17 @@
 	}
 #endif
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+const void *GraphicSystem::_mlx = mlx_init();
+
+void	my_mlx_pixel_put(ImageData &data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	dst = ((char *)data.getAddress()) + (y * data.getLineLen() + x * (data.getBPP() / 8));
 	*(unsigned int*)dst = color;
 }
 
-void	draw_square(t_data *img, size_t height, size_t width, size_t x, size_t y)
+void	draw_square(ImageData &img, size_t height, size_t width, size_t x, size_t y)
 {
 	size_t	area = height * width;
 	for (size_t i = 0; i < area; i++)
@@ -29,7 +31,7 @@ void	draw_square(t_data *img, size_t height, size_t width, size_t x, size_t y)
 	}
 }
 
-void	draw_circle(t_data *img, size_t radius, size_t a, size_t b)
+void	draw_circle(ImageData &img, size_t radius, size_t a, size_t b)
 {
 	for (size_t i = 0; i < HEIGHT * WIDTH; i+=1)
 	{
@@ -40,35 +42,25 @@ void	draw_circle(t_data *img, size_t radius, size_t a, size_t b)
 	}
 }
 
-void	draw_orthodox_triangle(t_data *img, int width, int height)
+void	draw_orthodox_triangle(ImageData &img, int width, int height)
 {
 	for (size_t i = 0; i < width / 2; i++)
 	{
 	}
 }
 
-typedef struct	s_vars {
-	void	*mlx;
-	void	*win;
-}				t_vars;
-
 int	main(void)
 {
 	Win			vars;
-	t_data		img;
+	ImageData	img;
 
-	img.img = mlx_new_image(vars.getMlx(), WIDTH, HEIGHT);
+	my_mlx_pixel_put(img, 5, 5, 0x00FF0000);
+	draw_square(img, HEIGHT / 5, WIDTH / 5, 0, 0);
+	draw_circle(img, 100, HEIGHT / 2, WIDTH / 2);
 
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-	my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
-	draw_square(&img, HEIGHT / 5, WIDTH / 5, 0, 0);
-	draw_circle(&img, 100, HEIGHT / 2, WIDTH / 2);
-
-	vars.putImage(&img, 0, 0);
+	vars.putImage(img, 0, 0);
 	mlx_key_hook(vars.getWin(), Hook::close, &vars);
 	mlx_destroy_hook(vars.getWin(), Hook::close, &vars);
-	mlx_loop(vars.getMlx());
-
+	mlx_loop(GraphicSystem::getMlx());
 	return (0);
 }

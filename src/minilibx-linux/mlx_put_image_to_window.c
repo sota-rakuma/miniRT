@@ -18,15 +18,11 @@ int	mlx_put_image_to_window(t_xvar *xvar,t_win_list *win,t_img *img,
 {
   GC	gc;
 
-  printf("b\n");
   gc = win->gc;
-  printf("c\n");
   if (img->gc)
     {
       gc = img->gc;
-      printf("d\n");
       XSetClipOrigin(xvar->display, gc, x, y);
-      printf("e\n");
     }
   if (img->type==MLX_TYPE_SHM)
     XShmPutImage(xvar->display,img->pix, win->gc, img->image,0,0,0,0,

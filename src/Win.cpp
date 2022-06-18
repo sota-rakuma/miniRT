@@ -14,50 +14,31 @@
 #include <iostream>
 Win::Win(void)
 {
-	_mlx = mlx_init();
-	if (_mlx == NULL)
-	{
-		std::cerr << "mlx_init error" << std::endl;
-		std::exit(1);
-	}
-	_win = mlx_new_window(_mlx, WIDTH, HEIGHT, const_cast<char *>(std::string("HelloWorld").c_str()));
+	_win = mlx_new_window(GraphicSystem::getMlx(), WIDTH, HEIGHT, const_cast<char *>(std::string("HelloWorld").c_str()));
 	if (_win == NULL)
 	{
 		std::cerr << "mlx_new_window error" << std::endl;
-		mlx_destroy_display(_mlx);
-		free(_mlx);
+		mlx_destroy_display(GraphicSystem::getMlx());
+		free(GraphicSystem::getMlx());
 		std::exit(1);
 	}
 }
 
 Win::Win(const std::string& title)
 {
-	_mlx = mlx_init();
-	if (_mlx == NULL)
-	{
-		std::cerr << "mlx_init error" << std::endl;
-		std::exit(1);
-	}
-	_win = mlx_new_window(_mlx, WIDTH, HEIGHT, const_cast<char *>(title.c_str()));
+	_win = mlx_new_window(GraphicSystem::getMlx(), WIDTH, HEIGHT, const_cast<char *>(title.c_str()));
 	if (_win == NULL)
 	{
 		std::cerr << "mlx_new_window error" << std::endl;
-		mlx_destroy_display(_mlx);
-		free(_mlx);
+		mlx_destroy_display(GraphicSystem::getMlx());
+		free(GraphicSystem::getMlx());
 		std::exit(1);
 	}
 }
 
 Win::~Win()
 {
-	mlx_destroy_window(_mlx, _win);
-	mlx_destroy_display(_mlx);
-	free(_mlx);
-}
-
-void	*Win::getMlx(void) const
-{
-	return (_mlx);
+	mlx_destroy_window(GraphicSystem::getMlx(), _win);
 }
 
 void	*Win::getWin(void) const
@@ -65,10 +46,7 @@ void	*Win::getWin(void) const
 	return (_win);
 }
 
-int	Win::putImage(t_data *data, int x, int y)
+int	Win::putImage(ImageData &data, int x, int y)
 {
-	std::cout << "a" << std::endl;
-	int i = mlx_put_image_to_window(_mlx, _win, data->img, x, y);
-	std::cout << "b" << std::endl;
-	return (i);
+	return (mlx_put_image_to_window(GraphicSystem::getMlx(), _win, data.getImage(), x, y));
 }

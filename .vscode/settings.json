@@ -1,0 +1,13 @@
+{
+	"files.associations": {
+		"mlx_int.h": "c",
+		"xlib.h": "c",
+		"new": "cpp",
+		"iostream": "cpp",
+		"ios": "cpp",
+		"__locale": "cpp",
+		"string": "cpp",
+		"__debug": "cpp",
+		"iosfwd": "cpp"
+	}
+}

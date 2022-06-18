@@ -8,6 +8,7 @@
 		"__locale": "cpp",
 		"string": "cpp",
 		"__debug": "cpp",
-		"iosfwd": "cpp"
-	}
+		"iosfwd": "cpp",
+	},
+	"editor.formatOnSave": true,
 }

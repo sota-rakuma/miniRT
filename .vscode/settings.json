@@ -9,6 +9,12 @@
 		"string": "cpp",
 		"__debug": "cpp",
 		"iosfwd": "cpp",
+		"imagedata.h": "c",
+		"libft.h": "c",
+		"polygon.h": "c",
+		"mlx.h": "c",
+		"unistd.h": "c",
+		"win.h": "c"
 	},
 	"editor.formatOnSave": true,
 }

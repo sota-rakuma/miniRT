@@ -4,7 +4,10 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/"
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/",
+                "${workspaceFolder}/include/",
+                "${workspaceFolder}/libft/",
+                "${workspaceFolder}/minilibx-linux"
             ],
             "defines": [],
             "macFrameworkPath": [],

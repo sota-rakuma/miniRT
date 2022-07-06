@@ -71,30 +71,35 @@ int	draw_line(t_coordinate* start, t_coordinate *end, \
 	t_coordinate	delta;
 	t_coordinate	tmp;
 	t_coordinate	steep;
-	int				diff;
+	int				error;
 
 	if (init_line_data(start, end, &delta, &steep))
 		return (1);
 	tmp = (t_coordinate){start->x, start->y};
-	diff = delta.x - delta.y;
+	error = delta.x - delta.y;
 	while (1)
 	{
 		my_mlx_pixel_put(data, tmp.x, tmp.y, color);
 		if (tmp.x == end->x && tmp.y == end->y)
 			break;
-		if ((2 * diff) > -delta.y)
+		if ((2 * error) > -delta.y) // Whether adding delta.y to the current x coordinate does not exceed half of the x increase
 		{
-			diff -= delta.y;
+			error -= delta.y;
 			tmp.x += steep.x;
 		}
-		if ((2 * diff) < delta.x)
+		else // If it is exceeded, add 1 to the y-coordinate and add x to error again to take into account the slope.
 		{
-			diff += delta.x;
+			error += delta.x;
 			tmp.y += steep.y;
 		}
 	}
 	return (0);
 }
+
+/*int	create_circle()
+{
+
+}*/
 
 // create_triangleで実装したい
 void	create_square(t_image_data *data, int height, int width, int color)

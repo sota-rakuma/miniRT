@@ -4,14 +4,14 @@
 #include "ForMapping.h"
 #include "Color.h"
 
-void	create_clip(t_for_map *data, int height, int width, int x, int y)
+void	create_clip(t_for_map *data, int height, int width, t_coordinate point)
 {
 	int	flag = 1;
 	int	color = 0x00ff0100;
 	while (color != 0x00ff0000)
 	{
 		t_image_data	*img_dat = init_image_data(data->_mlx, height, width);
-		t_frame			*frame = init_frame(img_dat, x, y);
+		t_frame			*frame = init_frame(img_dat, point);
 
 		create_square((t_image_data *)(frame->_img), height, width, color);
  		if (add_frame(data, frame))
@@ -56,12 +56,35 @@ int	main(void)
 	int	height = HEIGHT;
 	int	width = WIDTH;
 
-	for (size_t i = 0; i < HEIGHT / 2; i+=120)
+	/*for (size_t i = 0; i < HEIGHT / 2; i+=120)
 	{
-		create_clip(data, height, width, i, i);
+		create_clip(data, height, width, (t_coordinate){i,i});
 		height -= 240;
 		width -= 240;
+	}*/
+
+for (size_t i = 0; i < WIDTH; i++)
+	{
+		t_coordinate	a={i, 0};
+		t_coordinate	b={WIDTH - i, HEIGHT};
+		t_image_data	*img = init_image_data(data->_mlx, HEIGHT, WIDTH);
+		t_frame			*frame = init_frame(img, (t_coordinate){0, 0});
+
+		if (a.x == b.x)
+			continue;
+		draw_line(&a, &b, (t_image_data *)(frame->_img), 0x00ff0000);
+		add_frame(data, frame);
 	}
+
+
+/*
+	t_coordinate	a={100, 100};
+	t_coordinate	b={90, 250};
+	t_image_data	*img = init_image_data(data->_mlx, HEIGHT, WIDTH);
+	t_frame			*frame = init_frame(img, (t_coordinate){0, 0});
+	draw_line(&a, &b, (t_image_data *)(frame->_img), 0x00ff0000);
+	add_frame(data, frame);
+*/
 
 	mlx_loop_hook(mlx, get_animation, data);
 	mlx_loop(mlx);

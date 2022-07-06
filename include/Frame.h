@@ -12,7 +12,7 @@ typedef struct s_frame
 	int				_start_y;
 }				t_frame;
 
-t_frame	*init_frame(t_image_data *img, int x, int y);
+t_frame	*init_frame(t_image_data *img, t_coordinate start);
 void	*destruct_frame(void *mlx, t_frame *frame);
 
 #endif /* FRAME_H */

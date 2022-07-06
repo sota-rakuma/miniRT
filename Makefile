@@ -1,10 +1,10 @@
-CC:=gcc
+CC:=cc
 CFLAGS:=#-Wall -Wextra -Werror
 DEBUGFLAGS:=-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
 NAME:=a.out
 INCLUDE:=include
 SRC_DIR:=src
-SRC:=main.c \
+SRC:=test.c \
 	Win.c \
 	ImageData.c \
 	Frame.c \

@@ -31,6 +31,75 @@ static void	my_mlx_pixel_put(t_image_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
+static int	absolute(int x)
+{
+	if (x < 0)
+		return (-x);
+	return (x);
+}
+
+static int	init_line_data(t_coordinate *start, t_coordinate *end, \
+							t_coordinate *delta, t_coordinate *steep)
+{
+	if (!start || !end)
+		return (1);
+	delta->x = absolute(end->x - start->x);
+	delta->y = absolute(end->y - start->y);
+	if (start->x >= end->x)
+		steep->x = -1;
+	else
+		steep->x = 1;
+	if (start->y >= end->y)
+		steep->y = -1;
+	else
+		steep->y = 1;
+	return (0);
+}
+
+/**
+ * @brief Bresenham's line algorithm, it is draw line from start to end
+ * if return value more than 1 it is failed to draw line for some reason, othrewise it is ok
+ *
+ * @param start
+ * @param end
+ * @param data data of image
+ * @param color
+ */
+int	draw_line(t_coordinate* start, t_coordinate *end, \
+					t_image_data *data, t_color color)
+{
+	t_coordinate	delta;
+	t_coordinate	tmp;
+	t_coordinate	steep;
+	int				error;
+
+	if (init_line_data(start, end, &delta, &steep))
+		return (1);
+	tmp = (t_coordinate){start->x, start->y};
+	error = delta.x - delta.y;
+	while (1)
+	{
+		my_mlx_pixel_put(data, tmp.x, tmp.y, color);
+		if (tmp.x == end->x && tmp.y == end->y)
+			break;
+		if ((2 * error) > -delta.y) // Whether adding delta.y to the current x coordinate does not exceed half of the x increase
+		{
+			error -= delta.y;
+			tmp.x += steep.x;
+		}
+		else // If it is exceeded, add 1 to the y-coordinate and add x to error again to take into account the slope.
+		{
+			error += delta.x;
+			tmp.y += steep.y;
+		}
+	}
+	return (0);
+}
+
+/*int	create_circle()
+{
+
+}*/
 
 // create_triangleで実装したい
 void	create_square(t_image_data *data, int height, int width, int color)

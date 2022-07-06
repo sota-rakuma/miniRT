@@ -6,13 +6,12 @@
  * @brief
  *
  * @param imt	pointer to image data
- * @param x		the x-component of start of window which is drawn image.
- * @param y		the y-component of start of window which is drawn image
+ * @param start		the point of start of window which is drawn image.
  * image is bigger than window and you want to draw part of image into window,
  *  x and y can be negative value (it may be the negative value of the top left vertext(x, y) of the part of image which is you wanna see)
  * @return t_frame*
  */
-t_frame	*init_frame(t_image_data *img, int x, int y)
+t_frame	*init_frame(t_image_data *img, t_coordinate start)
 {
 	t_frame	*new;
 
@@ -23,8 +22,8 @@ t_frame	*init_frame(t_image_data *img, int x, int y)
 		exit(1);
 	}
 	new->_img = img;
-	new->_start_x = x;
-	new->_start_y = y;
+	new->_start_x = start.x;
+	new->_start_y = start.y;
 	return (new);
 }
 

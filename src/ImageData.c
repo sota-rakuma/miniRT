@@ -96,10 +96,37 @@ int	draw_line(t_coordinate* start, t_coordinate *end, \
 	return (0);
 }
 
-/*int	create_circle()
+int	draw_circle(t_coordinate *center, unsigned int radius, \
+					t_image_data *data, t_color color)
 {
+	t_coordinate	start;
+	t_coordinate	tmp;
+	int				error;
 
-}*/
+	if (center == NULL)
+		return (1);
+	if (center->x < radius || center->y < radius)
+		return (2);
+	start = (t_coordinate){center->x - radius, center->y};
+	tmp = (t_coordinate){start.x, start.y};
+	error = 5;
+	while (1)
+	{
+		my_mlx_pixel_put(data, tmp.x, tmp.y, color);
+		if (error > 0)
+		{
+			error += 8 * ((tmp.x - start.x) + (tmp.y - start.y) + 1);
+			tmp.x++;
+		}
+		else
+			error += 4 * (2 * (tmp.y - start.y) + 1);
+		tmp.y++;
+		printf("aaaaa\n");
+		if ((tmp.x - start.x) != (tmp.y - start.y))
+			break;
+	}
+	return (0);
+}
 
 // create_triangleで実装したい
 void	create_square(t_image_data *data, int height, int width, int color)

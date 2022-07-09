@@ -63,7 +63,8 @@ int	main(void)
 		width -= 240;
 	}*/
 
-for (size_t i = 0; i < WIDTH; i++)
+/*
+	for (size_t i = 0; i < WIDTH; i++)
 	{
 		t_coordinate	a={i, 0};
 		t_coordinate	b={WIDTH - i, HEIGHT};
@@ -75,16 +76,19 @@ for (size_t i = 0; i < WIDTH; i++)
 		draw_line(&a, &b, (t_image_data *)(frame->_img), 0x00ff0000);
 		add_frame(data, frame);
 	}
+*/
 
 
-/*
-	t_coordinate	a={100, 100};
-	t_coordinate	b={90, 250};
+	t_coordinate	a={WIDTH, HEIGHT};
+	t_coordinate	b={0, 0};
 	t_image_data	*img = init_image_data(data->_mlx, HEIGHT, WIDTH);
 	t_frame			*frame = init_frame(img, (t_coordinate){0, 0});
-	draw_line(&a, &b, (t_image_data *)(frame->_img), 0x00ff0000);
+	//draw_line(&b, &a, (t_image_data *)(frame->_img), 0x00ff0000);
+
+	int	ret = draw_circle(&a, WIDTH, (t_image_data *)(frame->_img), 0x00ff0000);
+	if (ret)
+		printf("ret: %d\n", ret);
 	add_frame(data, frame);
-*/
 
 	mlx_loop_hook(mlx, get_animation, data);
 	mlx_loop(mlx);

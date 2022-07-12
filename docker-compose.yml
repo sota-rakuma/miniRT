@@ -15,5 +15,5 @@ services:
     stdin_open: true
     tty: true
     environment:
-      - DISPLAY=172.22.4.143:0
+      - DISPLAY=172.22.1.41:0
     command: bash -c "/home/miniRT/src/mlx_install.sh && /bin/bash -i"

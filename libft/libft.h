@@ -6,7 +6,7 @@
 /*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/08 19:47:31 by srakuma           #+#    #+#             */
-/*   Updated: 2022/07/13 02:01:46 by rnishimo         ###   ########.fr       */
+/*   Updated: 2022/07/13 02:06:05 by rnishimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	*ft_memccpy(void *dst, const void *src, int c, size_t n);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strjoin_with_free(char const *s1, bool b1, char const *s2, bool b2);
+char	*ft_strjoin_with_free(char *s1, bool b1, char *s2, bool b2);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_substr(char const *s, unsigned int start, size_t len);

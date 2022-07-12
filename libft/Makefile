@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+         #
+#    By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 17:18:54 by srakuma           #+#    #+#              #
-#    Updated: 2022/06/28 01:23:49 by srakuma          ###   ########.fr        #
+#    Updated: 2022/07/13 01:08:20 by rnishimo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -101,4 +101,8 @@ fclean: clean
 
 .PHONY: re
 re: fclean all
+
+.PHONY: norm
+norm:
+	norminette | grep -v OK! || echo ok
 

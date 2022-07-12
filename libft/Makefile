@@ -6,7 +6,7 @@
 #    By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 17:18:54 by srakuma           #+#    #+#              #
-#    Updated: 2022/07/13 01:08:20 by rnishimo         ###   ########.fr        #
+#    Updated: 2022/07/13 02:02:01 by rnishimo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRCS = ft_strlen.c \
 		ft_strdup.c \
 		ft_substr.c \
 		ft_strjoin.c \
+		ft_strjoin_with_free.c \
 		ft_strtrim.c \
 		ft_split.c \
 		ft_itoa.c \

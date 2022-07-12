@@ -1,9 +1,9 @@
 /*
 ** mlx_put_image_to_window.c for MiniLibX in raytraceur
-**
+** 
 ** Made by Charlie Root
 ** Login   <ol@epitech.net>
-**
+** 
 ** Started on  Mon Aug 14 15:55:49 2000 Charlie Root
 ** Last update Sun Oct  2 09:53:00 2005 Olivier Crouzet
 */

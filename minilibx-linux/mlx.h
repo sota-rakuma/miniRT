@@ -1,9 +1,9 @@
 /*
-** mlx.h for MinilibX in
-**
+** mlx.h for MinilibX in 
+** 
 ** Made by Charlie Root
 ** Login   <ol@epitech.net>
-**
+** 
 ** Started on  Mon Jul 31 16:37:50 2000 Charlie Root
 ** Last update Tue May 15 16:23:28 2007 Olivier Crouzet
 */
@@ -29,7 +29,7 @@
 
 #ifndef MLX_H
 
-#define MLX_H
+#define	MLX_H
 
 
 void	*mlx_init();
@@ -81,10 +81,9 @@ int	mlx_get_color_value(void *mlx_ptr, int color);
 ** dealing with Events
 */
 
-int	mlx_mouse_hook (void *win_ptr, int (*funct_ptr)(int button, int x, int y, void *param), void *param);
-int	mlx_key_hook (void *win_ptr, int (*funct_ptr)(int keycode, void *param), void *param);
-int	mlx_expose_hook (void *win_ptr, int (*funct_ptr)(void *param), void *param);
-int	mlx_destroy_hook(void *win, int (*funct)(void *),void *param);
+int	mlx_mouse_hook (void *win_ptr, int (*funct_ptr)(), void *param);
+int	mlx_key_hook (void *win_ptr, int (*funct_ptr)(), void *param);
+int	mlx_expose_hook (void *win_ptr, int (*funct_ptr)(), void *param);
 
 int	mlx_loop_hook (void *mlx_ptr, int (*funct_ptr)(), void *param);
 int	mlx_loop (void *mlx_ptr);
@@ -125,6 +124,7 @@ int	mlx_destroy_display(void *mlx_ptr);
 
 int	mlx_hook(void *win_ptr, int x_event, int x_mask,
                  int (*funct)(), void *param);
+
 int	mlx_do_key_autorepeatoff(void *mlx_ptr);
 int	mlx_do_key_autorepeaton(void *mlx_ptr);
 int	mlx_do_sync(void *mlx_ptr);

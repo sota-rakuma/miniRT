@@ -42,6 +42,12 @@ void	create_clip(t_for_map *data, int height, int width, t_coordinate point)
 	}
 }
 
+int	key_event(int key_code, void *param) {
+	printf("key_code: %d\n", key_code);
+	if (key_code == 65307)
+		exit(0);
+}
+
 int	main(void)
 {
 	void	*mlx = mlx_init();
@@ -91,6 +97,7 @@ int	main(void)
 	add_frame(data, frame);
 
 	mlx_loop_hook(mlx, get_animation, data);
+	mlx_key_hook(win, key_event, data);
 	mlx_loop(mlx);
 	return (0);
 }

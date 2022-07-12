@@ -6,7 +6,7 @@
 /*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/08 19:47:31 by srakuma           #+#    #+#             */
-/*   Updated: 2022/07/13 02:06:05 by rnishimo         ###   ########.fr       */
+/*   Updated: 2022/07/13 02:30:14 by rnishimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,8 @@ t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 void	ft_lstclear(t_list **lst, void *ele, void (*del)());
+
+// get_next_line
+char	*get_next_line(int fd);
 
 #endif

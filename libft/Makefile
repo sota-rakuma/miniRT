@@ -6,7 +6,7 @@
 #    By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 17:18:54 by srakuma           #+#    #+#              #
-#    Updated: 2022/07/13 02:02:01 by rnishimo         ###   ########.fr        #
+#    Updated: 2022/07/13 02:42:42 by rnishimo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,8 @@ SRCS = ft_strlen.c \
 		ft_putchar_fd.c \
 		ft_putstr_fd.c \
 		ft_putendl_fd.c \
-		ft_putnbr_fd.c
+		ft_putnbr_fd.c \
+		get_next_line.c
 BONUS_SRCS = ft_lstnew.c \
 		ft_lstadd_front.c \
 		ft_lstsize.c \

@@ -3,18 +3,14 @@ CFLAGS:=#-Wall -Wextra -Werror
 NAME:=a.out
 INCLUDE:=include
 SRC_DIR:=src
-SRC:=test.c \
-	Win.c \
-	ImageData.c \
-	Frame.c \
-	Color.c \
-	ForMapping.c
+SRC:=$(wildcard src/*.c)
+SRC:=$(subst src/, , $(SRC))
 LIBFT:=ft
 LIBFT_DIR:=libft
 
 MLX_DIR:=minilibx-linux
 OS := $(shell uname)
-ifeq ($(OS), Linux) 
+ifeq ($(OS), Linux)
 LIBS_DIR:=/usr/lib
 MLX:=mlx_Linux
 LIBS:=-lXext -lX11 -lm -lz
@@ -22,7 +18,7 @@ DEBUGFLAGS:=-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
 else
 MLX:=mlx_Darwin
 LIBS_DIR:=/usr/X11R6/lib
-LIBS:=-lX11 -lXext -framework OpenGL -framework AppKit 
+LIBS:=-lX11 -lXext -framework OpenGL -framework AppKit
 DEBUGFLAGS:=
 endif
 
@@ -35,6 +31,8 @@ OBJ:=$(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 DEP:=$(addprefix $(DEP_DIR)/, $(SRC:.c=.d))
 
 all: $(NAME)
+a:
+	echo $(SRC)
 
 $(NAME): $(MLX_DIR)/lib$(MLX).a $(LIBFT_DIR)/lib$(LIBFT).a $(OBJ_DIR) $(DEP_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_DIR) -l$(LIBFT) -L$(MLX_DIR) -l$(MLX) -L$(LIBS_DIR) $(LIBS)

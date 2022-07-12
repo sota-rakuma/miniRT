@@ -1,8 +1,4 @@
-#include "Win.h"
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <mlx.h>
+#include "minirt.h"
 
 int key_event(int key_code, void *param)
 {

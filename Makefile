@@ -1,6 +1,5 @@
 CC:=cc
 CFLAGS:=#-Wall -Wextra -Werror
-DEBUGFLAGS:=-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
 NAME:=a.out
 INCLUDE:=include
 SRC_DIR:=src
@@ -12,10 +11,21 @@ SRC:=test.c \
 	ForMapping.c
 LIBFT:=ft
 LIBFT_DIR:=libft
-MLX:=mlx_Linux
+
 MLX_DIR:=minilibx-linux
-LIBS:=-lXext -lX11 -lm -lz
+OS := $(shell uname)
+ifeq ($(OS), Linux) 
 LIBS_DIR:=/usr/lib
+MLX:=mlx_Linux
+LIBS:=-lXext -lX11 -lm -lz
+DEBUGFLAGS:=-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
+else
+MLX:=mlx_Darwin
+LIBS_DIR:=/usr/X11R6/lib
+LIBS:=-lX11 -lXext -framework OpenGL -framework AppKit 
+DEBUGFLAGS:=
+endif
+
 OBJ_DIR:=obj
 ifdef TEST
 CXXFLAGS+=-DTEST
@@ -26,13 +36,8 @@ DEP:=$(addprefix $(DEP_DIR)/, $(SRC:.c=.d))
 
 all: $(NAME)
 
-ifdef DEBUG
 $(NAME): $(MLX_DIR)/lib$(MLX).a $(LIBFT_DIR)/lib$(LIBFT).a $(OBJ_DIR) $(DEP_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_DIR) -l$(LIBFT) -L$(MLX_DIR) -l$(MLX) -L$(LIBS_DIR) $(LIBS)
-else
-$(NAME): $(MLX_DIR)/lib$(MLX).a $(LIBFT_DIR)/lib$(LIBFT).a $(OBJ_DIR) $(DEP_DIR) $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_DIR) -l$(LIBFT) -L$(MLX_DIR) -l$(MLX) -L$(LIBS_DIR) $(LIBS)
-endif
 
 $(MLX_DIR)/lib$(MLX).a:
 	make -C $(MLX_DIR)

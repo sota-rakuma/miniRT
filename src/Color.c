@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Color.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/20 14:42:32 by srakuma           #+#    #+#             */
-/*   Updated: 2022/06/30 00:53:32 by srakuma          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Color.h"
 
 t_color	create_color(unsigned char t, unsigned char r, unsigned char g, unsigned char b)

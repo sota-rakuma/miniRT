@@ -102,28 +102,31 @@ int	draw_circle(t_coordinate *center, unsigned int radius, \
 	t_coordinate	start;
 	t_coordinate	tmp;
 	int				error;
+	int				x_first;
 
 	if (center == NULL)
 		return (1);
-	if (center->x < radius || center->y < radius)
+	if (center->x < radius || center->y < radius
+		|| WIDTH < (center->x + radius) || HEIGHT < (center->y + radius))
 		return (2);
 	start = (t_coordinate){center->x - radius, center->y};
+	//tmp = start;
 	tmp = (t_coordinate){start.x, start.y};
+	x_first = 1;
 	error = 5;
-	while (1)
+	while (2 * tmp.y != (2 * start.y) + radius)
 	{
 		my_mlx_pixel_put(data, tmp.x, tmp.y, color);
 		if (error > 0)
 		{
-			error += 8 * ((tmp.x - start.x) + (tmp.y - start.y) + 1);
+			x_first += 2;
+			error += (x_first * tmp.x - center->x + 2) << 2;
 			tmp.x++;
 		}
-		else
-			error += 4 * (2 * (tmp.y - start.y) + 1);
 		tmp.y++;
-		printf("aaaaa\n");
-		if ((tmp.x - start.x) != (tmp.y - start.y))
-			break;
+		error += /*diff.y*/ ((tmp.y - center->y) + 1) << 3;
+		printf("error : %d\n center->x: %d, tmp.x: %d\n center->y: %d, tmp.y: %d\n", \
+				error, center->x, tmp.x, center->y, tmp.y);
 	}
 	return (0);
 }

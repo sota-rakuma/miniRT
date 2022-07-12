@@ -79,13 +79,13 @@ int	main(void)
 */
 
 
-	t_coordinate	a={WIDTH, HEIGHT};
+	t_coordinate	a={250, 250};//{WIDTH, HEIGHT};
 	t_coordinate	b={0, 0};
 	t_image_data	*img = init_image_data(data->_mlx, HEIGHT, WIDTH);
 	t_frame			*frame = init_frame(img, (t_coordinate){0, 0});
 	//draw_line(&b, &a, (t_image_data *)(frame->_img), 0x00ff0000);
 
-	int	ret = draw_circle(&a, WIDTH, (t_image_data *)(frame->_img), 0x00ff0000);
+	int	ret = draw_circle(&a, 100, (t_image_data *)(frame->_img), 0x00ff0000);
 	if (ret)
 		printf("ret: %d\n", ret);
 	add_frame(data, frame);

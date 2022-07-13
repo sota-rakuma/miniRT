@@ -31,8 +31,6 @@ OBJ:=$(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 DEP:=$(addprefix $(DEP_DIR)/, $(SRC:.c=.d))
 
 all: $(NAME)
-a:
-	echo $(SRC)
 
 $(NAME): $(MLX_DIR)/lib$(MLX).a $(LIBFT_DIR)/lib$(LIBFT).a $(OBJ_DIR) $(DEP_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_DIR) -l$(LIBFT) -L$(MLX_DIR) -l$(MLX) -L$(LIBS_DIR) $(LIBS)

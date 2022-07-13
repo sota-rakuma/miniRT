@@ -16,7 +16,7 @@ int main(void)
 		printf("initialized mlx error\n");
 		exit(0);
 	}
-	void *win = init_win(mlx, "hello world");
+	void *win = win_init(mlx, "hello world");
 
 	int height = HEIGHT;
 	int width = WIDTH;

@@ -1,6 +1,6 @@
 CC:=cc
 CFLAGS:=#-Wall -Wextra -Werror
-NAME:=a.out
+NAME:=miniRT
 INCLUDE:=include
 SRC_DIR:=src
 SRC:=$(wildcard src/*.c)

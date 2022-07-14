@@ -1,9 +1,6 @@
 #ifndef IMG_H
 #define IMG_H
 
-#define WIDTH 500
-#define HEIGHT 500
-
 typedef struct s_img {
 	void* _img;
 	char* _addr;

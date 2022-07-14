@@ -38,6 +38,22 @@ t_vec3d sub(t_vec3d a, t_vec3d b) {
 	return ret;
 }
 
+t_vec3d add(t_vec3d a, t_vec3d b) {
+	t_vec3d ret;
+	ret.x = a.x + b.x;
+	ret.y = a.y + b.y;
+	ret.z = a.z + b.z;
+	return ret;
+}
+
+t_vec3d mult(t_vec3d a, double n) {
+	return (t_vec3d){a.x * n, a.y * n, a.z * n};
+}
+
+double length(t_vec3d a) {
+	return sqrt(dot(a, a));
+}
+
 int convert_color(t_color c) {
 	return ((int)c.r << 16 | (int)c.g << 8 | (int)c.b);
 }
@@ -64,6 +80,10 @@ int convert_color(t_color c) {
 	// 交差条件を満たす物体が2つの場合
 	// 	-> tが小さい方がスクリーンに映る
 
+typedef struct s_light {
+	t_vec3d	pos;
+} t_light;
+
 int main(void)
 {
 	void *mlx = mlx_init();
@@ -88,6 +108,10 @@ int main(void)
 	sp.radius = 1.0;
 	sp.color = (t_color){255.0, 0.0, 0.0};
 
+	// 点光源
+	t_light light;
+	light.pos = (t_vec3d){-5.0, 5.0, -5.0};
+
 	// 背景
 	t_color bg = (t_color){0.0, 0.0, 255.0};
 
@@ -103,7 +127,7 @@ int main(void)
 	
 	y = 0;
 	while (y < height) {
-		screen_p.y = (max_p - min_p) / (double)height * (double)y + min_p;
+		screen_p.y = max_p - ((max_p - min_p) / (double)height * (double)y);
 		x = 0;
 		while (x < width) {
 			screen_p.x = (max_p - min_p) / (double)width * (double)x + min_p;
@@ -119,16 +143,56 @@ int main(void)
 
 			double discriminant = b * b - 4 * a * c;
 
+			double t = -1;
+			if (discriminant == 0)
+				t = - b / (2 * a);
+			else if (discriminant > 0) {
+				double t1 = (- b - sqrt(discriminant)) / (2 * a);
+				double t2 = (- b + sqrt(discriminant)) / (2 * a);
+				double t_min = t1 > t2 ? t2 : t1;
+				double t_max = t1 > t2 ? t1 : t2;
+				t = t1 > 0 && t2 > 0 ? t_min : t_max;
+			}
+
+			// 光の強度
+			double intensity = 0.0;
+			if (t > 0) {
+				// 交差位置: 球面上の点 P = O + tD
+				t_vec3d int_pos = add(camera, mult(d, t));
+				// 入射ベクトル: 点光源 - 交差位置
+				//  -> 単位ベクトル
+				t_vec3d light_dir = sub(light.pos, int_pos);
+				light_dir = mult(light_dir, 1.0 / length(light_dir));
+				// 法線ベクトル: 交差位置(球面上の点) - 球中心
+				//  -> 単位ベクトル
+				t_vec3d normal = sub(int_pos, sp.center);
+				normal = mult(normal, 1.0 / length(normal));
+
+				// dot(入射ベクトル, 法線ベクトル) = |入射ベクトル||法線ベクトル|cosA
+				//  = 1 * 1 * cosA = cosA
+				double cosA = dot(light_dir, normal);
+				cosA = cosA >= 0 ? cosA : 0.0;
+				intensity = cosA;
+			}
+			t_color screen_color;
+			if (t > 0) {
+				screen_color = (t_color){sp.color.r * intensity, sp.color.g * intensity, sp.color.b * intensity};
+			} else {
+				screen_color = bg;
+			}
+			img_pixel_put(screen->_img, x, y, convert_color(screen_color));
+
+
 			// 交差判定
-			bool flag = (discriminant >= 0);
+			// bool flag = (discriminant >= 0);
 
 			// 出力	
 			// 	交差したら球色
 			// 	交差しなかったら背景色
-			if (flag)
-				img_pixel_put(screen->_img, x, y, convert_color(sp.color));
-			else
-				img_pixel_put(screen->_img, x, y, convert_color(bg));
+			// if (flag)
+			// 	img_pixel_put(screen->_img, x, y, convert_color(sp.color));
+			// else
+			// 	img_pixel_put(screen->_img, x, y, convert_color(bg));
 			x++;
 		}
 		y++;

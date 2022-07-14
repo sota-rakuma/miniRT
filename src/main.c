@@ -28,11 +28,41 @@ typedef struct s_sphere {
 
 double dot(t_vec3d a, t_vec3d b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z; 
-} 
+}
+
+t_vec3d sub(t_vec3d a, t_vec3d b) {
+	t_vec3d ret;
+	ret.x = a.x - b.x;
+	ret.y = a.y - b.y;
+	ret.z = a.z - b.z;
+	return ret;
+}
 
 int convert_color(t_color c) {
 	return ((int)c.r << 16 | (int)c.g << 8 | (int)c.b);
 }
+
+// 第1回
+	// <P-C, P-C> = r^2 // 球
+	// P = O + tD       // 視線上の任意の点
+
+	// 計算過程
+	// <O + tD -C, O + tD -C>   = r^2 
+	// <O - C + tD, O - C + tD> = r^2
+	// <CO + tD, CO + tD> = r^2
+
+	// <CO, CO> + 2t<D, CO> + t^2 <D, D> - r^2 = 0 
+	// a * t^2 + b * t + c = 0
+	// t = <解の公式>  
+
+	// t < 0: カメラより後ろ
+	// 0 <= t <= 1: カメラとスクリーンの間
+	// 1 < t: スクリーンの向こう側
+
+	// 交差条件: tが実数(D >= b^2 - 4ac) && t > 1 
+
+	// 交差条件を満たす物体が2つの場合
+	// 	-> tが小さい方がスクリーンに映る
 
 int main(void)
 {
@@ -71,27 +101,6 @@ int main(void)
 	long y;
 	long x;
 	
-	// <P-C, P-C> = r^2 // 球
-	// P = O + tD       // 視線上の任意の点
-
-	// 計算過程
-	// <O + tD -C, O + tD -C>   = r^2 
-	// <O - C + tD, O - C + tD> = r^2
-	// <CO + tD, CO + tD> = r^2
-
-	// <CO, CO> + 2t<D, CO> + t^2 <D, D> - r^2 = 0 
-	// a * t^2 + b * t + c = 0
-	// t = <解の公式>  
-
-	// t < 0: カメラより後ろ
-	// 0 <= t <= 1: カメラとスクリーンの間
-	// 1 < t: スクリーンの向こう側
-
-	// 交差条件: tが実数(D >= b^2 - 4ac) && t > 1 
-
-	// 交差条件を満たす物体が2つの場合
-	// 	-> tが小さい方がスクリーンに映る
-
 	y = 0;
 	while (y < height) {
 		screen_p.y = (max_p - min_p) / (double)height * (double)y + min_p;
@@ -99,16 +108,10 @@ int main(void)
 		while (x < width) {
 			screen_p.x = (max_p - min_p) / (double)width * (double)x + min_p;
 			// 視線ベクトル
-			t_vec3d d;
-			d.x = screen_p.x - camera.x;
-			d.y = screen_p.y - camera.y;
-			d.z = screen_p.z - camera.z;
+			t_vec3d d = sub(screen_p, camera);
 			
 			// 視点 - 球の中心 ベクトル
-			t_vec3d co;
-			co.x = camera.x - sp.center.x;
-			co.y = camera.y - sp.center.y;
-			co.z = camera.z - sp.center.z;
+			t_vec3d co = sub(camera, sp.center);
 
 			double a = dot(d, d);
 			double b = 2 * dot(d, co);

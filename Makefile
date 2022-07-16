@@ -7,6 +7,9 @@ SRC := $(wildcard src/*.c) $(wildcard src/*/*.c)
 OBJ := $(SRC:src/%.c=obj/%.o)
 DEP := $(SRC:src/%.c=obj/%.d)
 
+OBJ_DIR := $(sort $(dir $(OBJ)))
+OBJ_DIR := $(addsuffix .keep, $(OBJ_DIR))
+
 LIBFT := ft
 LIBFT_DIR := libft
 
@@ -39,8 +42,12 @@ $(MLX_DIR)/lib$(MLX).a:
 $(LIBFT_DIR)/lib$(LIBFT).a:
 	make bonus -C $(LIBFT_DIR)
 
-obj/%.o: src/%.c
+obj/%.o: src/%.c $(OBJ_DIR)
 	$(CC) $(CFLAGS) -MMD -MP -I$(MLX_DIR) -I$(INCLUDE) -I$(LIBFT_DIR) -c -o $@ $<
+
+$(OBJ_DIR):
+	mkdir -p $(@D)
+	touch $@
 
 -include $(DEP)
 

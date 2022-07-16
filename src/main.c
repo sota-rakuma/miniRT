@@ -58,8 +58,6 @@ int convert_color(t_color c) {
 	return ((int)c.r << 16 | (int)c.g << 8 | (int)c.b);
 }
 
-
-
 typedef struct s_light {
 	t_vec3d	pos;
 } t_light;
@@ -137,7 +135,7 @@ int main(void)
 			// パラメータ
 			double ka = 0.01; // 環境光反射係数
 			double kd = 0.69; // 拡散反射係数
-			double ks = 1;  // 鏡面反射係数
+			double ks = 0.3;  // 鏡面反射係数
 			double alpha = 8.0;    // 光沢度
 			double ia = 0.1;  // 環境光の強度
 			double ii = 1.0;  // 光源の光の強度

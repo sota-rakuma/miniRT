@@ -58,6 +58,47 @@ int convert_color(t_color c) {
 	return ((int)c.r << 16 | (int)c.g << 8 | (int)c.b);
 }
 
+t_color color_add_color(t_color a, t_color b)
+{
+	return ((t_color){a.r + b.r, a.g + b.g, a.b + b.b});
+}
+
+t_color color_add_num(t_color a, double num) {
+	return (t_color){a.r + num, a.g + num, a.b + num};
+}
+
+t_color color_mult_color(t_color a, t_color b)
+{
+	return ((t_color){a.r * b.r, a.g * b.g, a.b * a.b});
+}
+
+t_color color_mult_num(t_color a, double num)
+{
+	return ((t_color){a.r * num, a.g * num, a.b * num});
+}
+
+double double_max(double a, double b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+double double_min(double a, double b) {
+	if(a > b)
+		return (b);
+	return (a);
+}
+
+t_color color_normalize(t_color a)
+{
+	return (t_color){
+		double_max(0.0, double_min(1.0, a.r)),
+		double_max(0.0, double_min(1.0, a.g)),
+		double_max(0.0, double_min(1.0, a.b))
+	};
+}
+
 typedef struct s_light {
 	t_vec3d	pos;
 } t_light;
@@ -133,19 +174,19 @@ int main(void)
 			}
 
 			// パラメータ
-			double ka = 0.01; // 環境光反射係数
-			double kd = 0.69; // 拡散反射係数
-			double ks = 0.3;  // 鏡面反射係数
+			t_color ka = (t_color){0.01, 0.01, 0.01}; // 環境光反射係数
+			t_color kd = (t_color){0.69, 0.0, 0.0}; // 拡散反射係数
+			t_color ks = (t_color){0.3, 0.3, 0.3};;  // 鏡面反射係数
+			t_color ia = (t_color){0.1, 0.1, 0.1};;  // 環境光の強度
+			t_color ii = (t_color){1.0, 1.0, 1.0};;  // 光源の光の強度
 			double alpha = 8.0;    // 光沢度
-			double ia = 0.1;  // 環境光の強度
-			double ii = 1.0;  // 光源の光の強度
 
 			// 光の強度
-			double intensity = 0.0;
+			t_color intensity = (t_color){0.0, 0.0, 0.0};
 
 			// 環境光
-			double radience_amb = ia *ka;
-			intensity +=radience_amb;
+			t_color radience_amb = color_mult_color(ia, ka);
+			intensity = color_add_color(intensity, radience_amb);
 
 			if (t > 0) {
 				// 交差位置: 球面上の点 P = O + tD
@@ -164,11 +205,12 @@ int main(void)
 				//  = 1 * 1 * cosA = cosA
 				double cosA = dot(light_dir, normal);
 				cosA = cosA >= 0 ? cosA : 0.0;
-				double radience_dif = cosA * kd * ii;
-				intensity += radience_dif;
+				t_color radience_dif = color_mult_num(
+						color_mult_color(kd, ii), cosA);
+				intensity = color_add_color(intensity, radience_dif);
 
 				// 鏡面反射光 ----------------------------------------
-				double radience_spe = 0.0;
+				t_color radience_spe = (t_color){0.0, 0.0, 0.0};
 				if (cosA > 0)
 				{
 					//正反射ベクトル
@@ -178,16 +220,17 @@ int main(void)
 					// 視線ベクトルの逆単位ベクトルと正反射ベクトルの内積
 					double v_dot_r = dot(v, r);
 					v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;
-					radience_spe = ks * ii * pow(v_dot_r, alpha);
+					radience_spe = color_mult_num(
+						color_mult_color(ks, ii), pow(v_dot_r, alpha));
 				}
-				intensity += radience_spe;
+				intensity = color_add_color(intensity, radience_spe);
 			}
 			// [0, 1]に収める
-			intensity = intensity <= 1.0 ? intensity : 1.0;
-			intensity = intensity >= 0.0 ? intensity : 0.0;
+			intensity = color_normalize(intensity);
+
 			t_color screen_color;
 			if (t > 0) {
-				screen_color = (t_color){sp.color.r * intensity, sp.color.g * intensity, sp.color.b * intensity};
+				screen_color = color_mult_num(intensity, 255.0);
 			} else {
 				screen_color = bg;
 			}

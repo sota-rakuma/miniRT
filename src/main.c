@@ -86,7 +86,7 @@ int main(void)
 	t_sphere sp;
 	sp.center = (t_vec3d){0, 0, 5};
 	sp.radius = 1.0;
-	sp.color = (t_color){255.0, 0.0, 0.0};
+	sp.color = (t_color){255.0, 255.0, 255.0};
 
 	// 点光源
 	t_light light;
@@ -134,8 +134,21 @@ int main(void)
 				t = t1 > 0 && t2 > 0 ? t_min : t_max;
 			}
 
+			// パラメータ
+			double ka = 0.01; // 環境光反射係数
+			double kd = 0.69; // 拡散反射係数
+			double ks = 1;  // 鏡面反射係数
+			double alpha = 8.0;    // 光沢度
+			double ia = 0.1;  // 環境光の強度
+			double ii = 1.0;  // 光源の光の強度
+
 			// 光の強度
 			double intensity = 0.0;
+
+			// 環境光
+			double radience_amb = ia *ka;
+			intensity +=radience_amb;
+
 			if (t > 0) {
 				// 交差位置: 球面上の点 P = O + tD
 				t_vec3d int_pos = add(camera, mult(d, t));
@@ -148,12 +161,32 @@ int main(void)
 				t_vec3d normal = sub(int_pos, sp.center);
 				normal = mult(normal, 1.0 / length(normal));
 
+				// 拡散反射光 ----------------------------------------
 				// dot(入射ベクトル, 法線ベクトル) = |入射ベクトル||法線ベクトル|cosA
 				//  = 1 * 1 * cosA = cosA
 				double cosA = dot(light_dir, normal);
 				cosA = cosA >= 0 ? cosA : 0.0;
-				intensity = cosA;
+				double radience_dif = cosA * kd * ii;
+				intensity += radience_dif;
+
+				// 鏡面反射光 ----------------------------------------
+				double radience_spe = 0.0;
+				if (cosA > 0)
+				{
+					//正反射ベクトル
+					t_vec3d r = sub(mult(normal, 2 * (cosA)), light_dir);
+					// 視線ベクトルの逆単位ベクトル
+					t_vec3d v = mult(int_pos, -1.0 * 1.0 / length(int_pos));
+					// 視線ベクトルの逆単位ベクトルと正反射ベクトルの内積
+					double v_dot_r = dot(v, r);
+					v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;
+					radience_spe = ks * ii * pow(v_dot_r, alpha);
+				}
+				intensity += radience_spe;
 			}
+			// [0, 1]に収める
+			intensity = intensity <= 1.0 ? intensity : 1.0;
+			intensity = intensity >= 0.0 ? intensity : 0.0;
 			t_color screen_color;
 			if (t > 0) {
 				screen_color = (t_color){sp.color.r * intensity, sp.color.g * intensity, sp.color.b * intensity};

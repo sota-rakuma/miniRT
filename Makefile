@@ -1,7 +1,6 @@
 CC:=cc
 CFLAGS:=#-Wall -Wextra -Werror
 NAME:=miniRT
-INCLUDE:=include
 
 SRC := $(wildcard src/*.c) $(wildcard src/*/*.c)
 OBJ := $(SRC:src/%.c=obj/%.o)
@@ -27,14 +26,15 @@ LIBS := -lX11 -lXext -framework OpenGL -framework AppKit
 DEBUGFLAGS :=
 endif
 
-ifdef TEST
-CXXFLAGS += -DTEST
-endif
+DEPSFLAGS := -MMD -MP
 
 all: $(NAME)
 
-$(NAME): $(MLX_DIR)/lib$(MLX).a $(LIBFT_DIR)/lib$(LIBFT).a $(OBJ_DIR) $(DEP_DIR) $(OBJ)
-	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(NAME) $(OBJ) -L$(LIBFT_DIR) -l$(LIBFT) -L$(MLX_DIR) -l$(MLX) -L$(LIBS_DIR) $(LIBS)
+$(NAME): $(MLX_DIR)/lib$(MLX).a $(LIBFT_DIR)/lib$(LIBFT).a $(OBJ)
+	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(NAME) $(OBJ) \
+		-L$(LIBFT_DIR) -l$(LIBFT) \
+		-L$(MLX_DIR) -l$(MLX) \
+		-L$(LIBS_DIR) $(LIBS)
 
 $(MLX_DIR)/lib$(MLX).a:
 	make -C $(MLX_DIR)
@@ -43,7 +43,7 @@ $(LIBFT_DIR)/lib$(LIBFT).a:
 	make bonus -C $(LIBFT_DIR)
 
 obj/%.o: src/%.c $(OBJ_DIR)
-	$(CC) $(CFLAGS) -MMD -MP -I$(MLX_DIR) -I$(INCLUDE) -I$(LIBFT_DIR) -c -o $@ $<
+	$(CC) $(CFLAGS) $(DEPSFLAGS) -I$(MLX_DIR) -I$(LIBFT_DIR) -c -o $@ $<
 
 $(OBJ_DIR):
 	mkdir -p $(@D)

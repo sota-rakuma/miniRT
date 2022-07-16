@@ -27,7 +27,7 @@ typedef struct s_sphere {
 } t_sphere;
 
 double dot(t_vec3d a, t_vec3d b) {
-	return a.x * b.x + a.y * b.y + a.z * b.z; 
+	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 t_vec3d sub(t_vec3d a, t_vec3d b) {
@@ -104,7 +104,7 @@ int main(void)
 	// forで回す
 	long y;
 	long x;
-	
+
 	y = 0;
 	while (y < height) {
 		screen_p.y = max_p - ((max_p - min_p) / (double)height * (double)y);
@@ -113,7 +113,7 @@ int main(void)
 			screen_p.x = (max_p - min_p) / (double)width * (double)x + min_p;
 			// 視線ベクトル
 			t_vec3d d = sub(screen_p, camera);
-			
+
 			// 視点 - 球の中心 ベクトル
 			t_vec3d co = sub(camera, sp.center);
 
@@ -161,18 +161,6 @@ int main(void)
 				screen_color = bg;
 			}
 			img_pixel_put(screen->_img, x, y, convert_color(screen_color));
-
-
-			// 交差判定
-			// bool flag = (discriminant >= 0);
-
-			// 出力	
-			// 	交差したら球色
-			// 	交差しなかったら背景色
-			// if (flag)
-			// 	img_pixel_put(screen->_img, x, y, convert_color(sp.color));
-			// else
-			// 	img_pixel_put(screen->_img, x, y, convert_color(bg));
 			x++;
 		}
 		y++;

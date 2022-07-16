@@ -2,33 +2,31 @@ CC:=cc
 CFLAGS:=#-Wall -Wextra -Werror
 NAME:=miniRT
 INCLUDE:=include
-SRC_DIR:=src
-SRC:=$(wildcard src/*.c)
-SRC:=$(subst src/, , $(SRC))
-LIBFT:=ft
-LIBFT_DIR:=libft
 
-MLX_DIR:=minilibx-linux
+SRC := $(wildcard src/*.c) $(wildcard src/*/*.c)
+OBJ := $(SRC:src/%.c=obj/%.o)
+DEP := $(SRC:src/%.c=obj/%.d)
+
+LIBFT := ft
+LIBFT_DIR := libft
+
+MLX_DIR := minilibx-linux
 OS := $(shell uname)
 ifeq ($(OS), Linux)
-LIBS_DIR:=/usr/lib
-MLX:=mlx_Linux
-LIBS:=-lXext -lX11 -lm -lz
-DEBUGFLAGS:=-g -fsanitize=address -fsanitize=leak -fsanitize=undefined
+LIBS_DIR := /usr/lib
+MLX := mlx_Linux
+LIBS := -lXext -lX11 -lm -lz
+DEBUGFLAGS := -g -fsanitize=address -fsanitize=leak -fsanitize=undefined
 else
-MLX:=mlx_Darwin
-LIBS_DIR:=/usr/X11R6/lib
-LIBS:=-lX11 -lXext -framework OpenGL -framework AppKit
-DEBUGFLAGS:=
+MLX := mlx_Darwin
+LIBS_DIR := /usr/X11R6/lib
+LIBS := -lX11 -lXext -framework OpenGL -framework AppKit
+DEBUGFLAGS :=
 endif
 
-OBJ_DIR:=obj
 ifdef TEST
-CXXFLAGS+=-DTEST
+CXXFLAGS += -DTEST
 endif
-DEP_DIR:=dep
-OBJ:=$(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
-DEP:=$(addprefix $(DEP_DIR)/, $(SRC:.c=.d))
 
 all: $(NAME)
 
@@ -41,20 +39,13 @@ $(MLX_DIR)/lib$(MLX).a:
 $(LIBFT_DIR)/lib$(LIBFT).a:
 	make bonus -C $(LIBFT_DIR)
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR);
-
-$(DEP_DIR):
-	@mkdir -p $(DEP_DIR)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+obj/%.o: src/%.c
 	$(CC) $(CFLAGS) -MMD -MP -I$(MLX_DIR) -I$(INCLUDE) -I$(LIBFT_DIR) -c -o $@ $<
-	@mv $(OBJ_DIR)/*.d $(DEP_DIR)/
 
 -include $(DEP)
 
 clean:
-	rm -fR $(OBJ_DIR) $(DEP_DIR)
+	rm -f $(OBJ) $(DEP)
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean

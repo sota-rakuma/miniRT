@@ -1,7 +1,10 @@
 #ifndef MINIRT_H
 #define MINIRT_H
 
-#include "screen.h"
+#include "screen/screen.h"
+#include "vec3d/vec3d.h"
+#include "color/color.h"
+#include "util/util.h"
 
 #define WIDTH 600
 #define HEIGHT 600

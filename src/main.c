@@ -8,100 +8,17 @@ int key_event(int key_code, void *param)
 	return (0);
 }
 
-typedef struct s_color {
-	double r;
-	double g;
-	double b;
-} t_color;
-
-typedef struct s_vec3d {
-	double x;
-	double y;
-	double z;
-} t_vec3d;
-
 typedef struct s_sphere {
 	t_vec3d center;
 	double radius;
 	t_color color;
 } t_sphere;
 
-double dot(t_vec3d a, t_vec3d b) {
-	return a.x * b.x + a.y * b.y + a.z * b.z;
-}
-
-t_vec3d sub(t_vec3d a, t_vec3d b) {
-	t_vec3d ret;
-	ret.x = a.x - b.x;
-	ret.y = a.y - b.y;
-	ret.z = a.z - b.z;
-	return ret;
-}
-
-t_vec3d add(t_vec3d a, t_vec3d b) {
-	t_vec3d ret;
-	ret.x = a.x + b.x;
-	ret.y = a.y + b.y;
-	ret.z = a.z + b.z;
-	return ret;
-}
-
-t_vec3d mult(t_vec3d a, double n) {
-	return (t_vec3d){a.x * n, a.y * n, a.z * n};
-}
-
-double length(t_vec3d a) {
-	return sqrt(dot(a, a));
-}
-
-int convert_color(t_color c) {
-	return ((int)c.r << 16 | (int)c.g << 8 | (int)c.b);
-}
-
-t_color color_add_color(t_color a, t_color b)
-{
-	return ((t_color){a.r + b.r, a.g + b.g, a.b + b.b});
-}
-
-t_color color_add_num(t_color a, double num) {
-	return (t_color){a.r + num, a.g + num, a.b + num};
-}
-
-t_color color_mult_color(t_color a, t_color b)
-{
-	return ((t_color){a.r * b.r, a.g * b.g, a.b * a.b});
-}
-
-t_color color_mult_num(t_color a, double num)
-{
-	return ((t_color){a.r * num, a.g * num, a.b * num});
-}
-
-double double_max(double a, double b)
-{
-	if (a > b)
-		return (a);
-	return (b);
-}
-
-double double_min(double a, double b) {
-	if(a > b)
-		return (b);
-	return (a);
-}
-
-t_color color_normalize(t_color a)
-{
-	return (t_color){
-		double_max(0.0, double_min(1.0, a.r)),
-		double_max(0.0, double_min(1.0, a.g)),
-		double_max(0.0, double_min(1.0, a.b))
-	};
-}
-
 typedef struct s_light {
 	t_vec3d	pos;
 } t_light;
+
+
 
 int main(void)
 {
@@ -151,14 +68,14 @@ int main(void)
 		while (x < width) {
 			screen_p.x = (max_p - min_p) / (double)width * (double)x + min_p;
 			// 視線ベクトル
-			t_vec3d d = sub(screen_p, camera);
+			t_vec3d d = vec3d_sub(screen_p, camera);
 
 			// 視点 - 球の中心 ベクトル
-			t_vec3d co = sub(camera, sp.center);
+			t_vec3d co = vec3d_sub(camera, sp.center);
 
-			double a = dot(d, d);
-			double b = 2 * dot(d, co);
-			double c = dot(co, co) - sp.radius * sp.radius;
+			double a = vec3d_dot(d, d);
+			double b = 2 * vec3d_dot(d, co);
+			double c = vec3d_dot(co, co) - sp.radius * sp.radius;
 
 			double discriminant = b * b - 4 * a * c;
 
@@ -190,20 +107,20 @@ int main(void)
 
 			if (t > 0) {
 				// 交差位置: 球面上の点 P = O + tD
-				t_vec3d int_pos = add(camera, mult(d, t));
+				t_vec3d int_pos = vec3d_add(camera, vec3d_mult(d, t));
 				// 入射ベクトル: 点光源 - 交差位置
 				//  -> 単位ベクトル
-				t_vec3d light_dir = sub(light.pos, int_pos);
-				light_dir = mult(light_dir, 1.0 / length(light_dir));
+				t_vec3d light_dir = vec3d_sub(light.pos, int_pos);
+				light_dir = vec3d_mult(light_dir, 1.0 / vec3d_length(light_dir));
 				// 法線ベクトル: 交差位置(球面上の点) - 球中心
 				//  -> 単位ベクトル
-				t_vec3d normal = sub(int_pos, sp.center);
-				normal = mult(normal, 1.0 / length(normal));
+				t_vec3d normal = vec3d_sub(int_pos, sp.center);
+				normal = vec3d_mult(normal, 1.0 / vec3d_length(normal));
 
 				// 拡散反射光 ----------------------------------------
-				// dot(入射ベクトル, 法線ベクトル) = |入射ベクトル||法線ベクトル|cosA
+				// vec3d_dot(入射ベクトル, 法線ベクトル) = |入射ベクトル||法線ベクトル|cosA
 				//  = 1 * 1 * cosA = cosA
-				double cosA = dot(light_dir, normal);
+				double cosA = vec3d_dot(light_dir, normal);
 				cosA = cosA >= 0 ? cosA : 0.0;
 				t_color radience_dif = color_mult_num(
 						color_mult_color(kd, ii), cosA);
@@ -214,11 +131,11 @@ int main(void)
 				if (cosA > 0)
 				{
 					//正反射ベクトル
-					t_vec3d r = sub(mult(normal, 2 * (cosA)), light_dir);
+					t_vec3d r = vec3d_sub(vec3d_mult(normal, 2 * (cosA)), light_dir);
 					// 視線ベクトルの逆単位ベクトル
-					t_vec3d v = mult(int_pos, -1.0 * 1.0 / length(int_pos));
+					t_vec3d v = vec3d_mult(int_pos, -1.0 * 1.0 / vec3d_length(int_pos));
 					// 視線ベクトルの逆単位ベクトルと正反射ベクトルの内積
-					double v_dot_r = dot(v, r);
+					double v_dot_r = vec3d_dot(v, r);
 					v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;
 					radience_spe = color_mult_num(
 						color_mult_color(ks, ii), pow(v_dot_r, alpha));

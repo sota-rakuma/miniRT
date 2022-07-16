@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "../minirt.h"
 
 void *win_init(void *mlx, char *title)
 {

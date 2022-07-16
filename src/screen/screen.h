@@ -1,7 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "img.h"
+#include "../img.h"
 
 typedef struct s_screen
 {

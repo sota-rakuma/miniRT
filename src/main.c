@@ -8,17 +8,10 @@ int key_event(int key_code, void *param)
 	return (0);
 }
 
-typedef struct s_sphere {
-	t_vec3d center;
-	double radius;
-	t_color color;
-} t_sphere;
-
-typedef struct s_light {
-	t_vec3d	pos;
-} t_light;
-
-
+t_vec3d get_vec_camera_to_screen(t_world *world, t_vec3d screen_p)
+{
+	return (vec3d_sub(screen_p, world->camera.pos));
+}
 
 int main(void)
 {
@@ -35,21 +28,20 @@ int main(void)
 	int height = HEIGHT;
 	int width = WIDTH;
 
+	// ファイルをパース
+	t_world *world = world_init();
+
 	// 視点の位置を決める
-	t_vec3d camera = (t_vec3d){0, 0, -5};
+	t_camera camera = world->camera;
 
 	// 球
-	t_sphere sp;
-	sp.center = (t_vec3d){0, 0, 5};
-	sp.radius = 1.0;
-	sp.color = (t_color){255.0, 255.0, 255.0};
+	t_shape sp = *(world->shape_list);
 
 	// 点光源
-	t_light light;
-	light.pos = (t_vec3d){-5.0, 5.0, -5.0};
+	t_light light = *(world->light_list);
 
 	// 背景
-	t_color bg = (t_color){0.0, 0.0, 255.0};
+	t_color bg = world->bg;
 
 	// スクリーン上の点
 	t_vec3d screen_p;
@@ -60,22 +52,23 @@ int main(void)
 	// forで回す
 	long y;
 	long x;
-
 	y = 0;
 	while (y < height) {
 		screen_p.y = max_p - ((max_p - min_p) / (double)height * (double)y);
 		x = 0;
 		while (x < width) {
 			screen_p.x = (max_p - min_p) / (double)width * (double)x + min_p;
+
 			// 視線ベクトル
-			t_vec3d d = vec3d_sub(screen_p, camera);
-
+			// t_vec3d d = vec3d_sub(screen_p, camera.pos);
+			// t_vec3d d = vec3d_sub(screen_p, world->camera.pos);
+			t_vec3d screen_to_o = get_vec_camera_to_screen(world, screen_p);
 			// 視点 - 球の中心 ベクトル
-			t_vec3d co = vec3d_sub(camera, sp.center);
+			t_vec3d center_to_o = vec3d_sub(camera.pos, sp.center);
 
-			double a = vec3d_dot(d, d);
-			double b = 2 * vec3d_dot(d, co);
-			double c = vec3d_dot(co, co) - sp.radius * sp.radius;
+			double a = vec3d_dot(screen_to_o, screen_to_o);
+			double b = 2 * vec3d_dot(screen_to_o, center_to_o);
+			double c = vec3d_dot(center_to_o, center_to_o) - sp.radius * sp.radius;
 
 			double discriminant = b * b - 4 * a * c;
 
@@ -107,7 +100,7 @@ int main(void)
 
 			if (t > 0) {
 				// 交差位置: 球面上の点 P = O + tD
-				t_vec3d int_pos = vec3d_add(camera, vec3d_mult(d, t));
+				t_vec3d int_pos = vec3d_add(camera.pos, vec3d_mult(screen_to_o, t));
 				// 入射ベクトル: 点光源 - 交差位置
 				//  -> 単位ベクトル
 				t_vec3d light_dir = vec3d_sub(light.pos, int_pos);

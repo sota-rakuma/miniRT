@@ -34,8 +34,9 @@ t_world	*world_init() {
 
         shape->ka = (t_color){0.01, 0.01, 0.01}; // 環境光反射係数
         shape->kd = (t_color){0.69, 0.0, 0.0};   // 拡散反射係数
-        shape->ks = (t_color){0.3, 0.3, 0.3}; // 鏡面反射係数
-		
+        shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
+		shape->shininess = 8.0;                  //光沢度
+
 		world_add_shape(world, shape);
 	}
 

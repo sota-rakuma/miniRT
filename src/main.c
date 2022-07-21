@@ -102,7 +102,6 @@ int main(void) {
 
             // パラメータ
             //t_color ii = (t_color){1.0, 1.0, 1.0}; // 光源の光の強度
-            double alpha = 8.0;                    // 光沢度
 
             // 光の強度
             t_color intensity = (t_color){0.0, 0.0, 0.0};
@@ -143,7 +142,7 @@ int main(void) {
                         cosA = cosA >= 0 ? cosA : 0.0;
                         t_color radience_dif = color_mult_num(
                             color_mult_color(nearest_shape->kd, ii), cosA);
-                        // intensity = color_add_color(intensity, radience_dif);
+                        intensity = color_add_color(intensity, radience_dif);
 
                         // 鏡面反射光 ----------------------------------------
                         t_color radience_spe = (t_color){0.0, 0.0, 0.0};
@@ -159,9 +158,9 @@ int main(void) {
                             v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;
                             radience_spe = color_mult_num(
                                 color_mult_color(nearest_shape->ks, ii),
-                                pow(v_dot_r, alpha));
+                                pow(v_dot_r, nearest_shape->shininess));
                         }
-                        // intensity = color_add_color(intensity, radience_spe);
+                        intensity = color_add_color(intensity, radience_spe);
                     }
                     now_light = now_light->next;
                 }

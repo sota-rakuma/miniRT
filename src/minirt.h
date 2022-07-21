@@ -53,6 +53,7 @@ typedef struct s_shape {
 	t_color			ka;
 	t_color			kd;
 	t_color			ks;
+	double			shininess;
 
 	// sphere
 	t_vec3d			center;

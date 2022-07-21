@@ -50,6 +50,9 @@ typedef struct s_shape {
 
 	// common
 	t_color			color;
+	t_color			ka;
+	t_color			kd;
+	t_color			ks;
 
 	// sphere
 	t_vec3d			center;
@@ -65,7 +68,7 @@ typedef struct s_camera {
 typedef struct s_world {
 	t_light		*light_list;
 	t_shape		*shape_list;
-	t_camera	camera;
+	t_camera	*camera;
 	t_color		bg;
 } t_world;
 

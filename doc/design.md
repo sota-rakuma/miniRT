@@ -138,3 +138,47 @@ main()
 // 個人的には係数は各光源ごとにかけるのではなくて、最後にかけて足したい。
 // 効果は如何程かわからないが、少しは早くなる気がする。
 ```
+
+
+```c
+// lightにかんするまとめ
+double light_get_ambient(light);
+{
+ 	return (light->ka * light->intensity);
+}
+
+double light_get_diffuse(light, t_vec3d n, t_vec3d l)
+{
+	return (light->kd * light->intensity * dot(n, l));
+}
+
+double light_get_specular(light, t_vec3dn, t_vec3d d, t_vec3d l)
+{ 
+	t_vec3d v = vec_sub(vec_mult_num(n, 2 * dot(l, n)), l);
+	t_vec3d r = -d;
+
+	return (light->ks, pow( dot(v, r), light->shininess ));
+}
+
+double get_inensity(world)
+{
+	t_light *now_light = world->light_lists;
+	double intensity = 0.0;
+	
+	while (now_light)
+	{
+		if (light->kind == AMBIENT_LIGHT)
+		{
+			intensity += light_get_ambient(now_light);
+		}
+		else
+		{
+			intensity += light_get_diffuse() + light_get_specular();
+		}
+		now_light = now_light->next;
+	}
+
+	// わんちゃん　intensity をノーマライずした値を返す必要がありそう
+	return (intensity);
+}
+```

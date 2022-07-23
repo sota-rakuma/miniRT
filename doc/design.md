@@ -142,29 +142,32 @@ main()
 
 ```c
 // lightにかんするまとめ
-double light_get_ambient(light);
+t_color light_get_ambient_1(t_light *light, t_color ka)
 {
- 	return (light->ka * light->intensity);
+	return (ka * light->intensity);
 }
 
-double light_get_diffuse(light, t_vec3d n, t_vec3d l)
+
+t_color light_get_diffuse_1(t_light *light, t_color ks, t_vec3d n, t_vec3d l)
 {
-	return (light->kd * light->intensity * dot(n, l));
+	return (kd * light->intensity * dot (n, l));
 }
 
-double light_get_specular(light, t_vec3dn, t_vec3d d, t_vec3d l)
-{ 
-	t_vec3d v = vec_sub(vec_mult_num(n, 2 * dot(l, n)), l);
-	t_vec3d r = -d;
 
-	return (light->ks, pow( dot(v, r), light->shininess ));
+t_color light_get_specular_1(t_light *light, t_shape *shape, t_vec3d n, t_vec3d d, t_vec3d l)
+{
+	t_vec3d v = vec3d_sub(vec3d_mult(n, 2 * dot(l, n)), l);
+	t_vec3d r = vec3d_mult(d, -1);
+
+	return (color_mult_num(shape->ks, pow( dot(v, r), shape->shininess)));
 }
 
-double get_inensity(world)
+
+t_color get_inensity(t_world *world)
 {
 	t_light *now_light = world->light_lists;
 	double intensity = 0.0;
-	
+
 	while (now_light)
 	{
 		if (light->kind == AMBIENT_LIGHT)
@@ -178,7 +181,7 @@ double get_inensity(world)
 		now_light = now_light->next;
 	}
 
-	// わんちゃん　intensity をノーマライずした値を返す必要がありそう
+	// わんちゃん intensity をノーマライずした値を返す必要がありそう
 	return (intensity);
 }
 ```

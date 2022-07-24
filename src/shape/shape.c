@@ -4,9 +4,9 @@ static t_vec3d vec3d_camera(t_camera *camera) {
     return (camera->pos);
 }
 
-double with_sphere(t_vec3d o_to_screen, t_camera *camera, t_shape *shape)
+double with_sphere(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 {
-    t_vec3d center_to_o = vec3d_sub(vec3d_camera(camera),
+    t_vec3d center_to_o = vec3d_sub(o,
                                     shape->center);
     // 判別式
     double a = vec3d_dot(o_to_screen, o_to_screen);
@@ -27,9 +27,9 @@ double with_sphere(t_vec3d o_to_screen, t_camera *camera, t_shape *shape)
 	return (-1.0);
 }
 
-double with_plane(t_vec3d o_to_screen, t_camera *camera, t_shape *shape)
+double with_plane(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 {
-    t_vec3d o_to_point = vec3d_sub(shape->point, vec3d_camera(camera));
+    t_vec3d o_to_point = vec3d_sub(shape->point, o);
     double a = vec3d_dot(shape->oriental_normal, o_to_screen);
     double  b = vec3d_dot(shape->oriental_normal, o_to_point);
 	if (a != 0.0)

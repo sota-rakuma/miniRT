@@ -39,7 +39,7 @@ int main(void) {
     t_camera *camera = world->camera;
 
     // 球
-    //t_shape sp = *(world->shape_list);
+    // t_shape sp = *(world->shape_list);
 
     // 点光源
     t_light light = *(world->light_list);
@@ -54,7 +54,7 @@ int main(void) {
     double max_p = 1.0;
 
     // 交差判定をする関数ポインタの配列
-    double  (*shape_get_intersection[])() = {with_sphere, with_plane};
+    double (*shape_get_intersection[])() = {with_sphere, with_plane};
 
     // forで回す
     long y;
@@ -77,9 +77,7 @@ int main(void) {
             while (now_shape) {
                 double t = -1.0;
                 t = shape_get_intersection[now_shape->kind](
-                        o_to_screen,
-                        world->camera,
-                        now_shape);
+                    o_to_screen, vec3d_camera(world->camera), now_shape);
                 if (t >= 1.0 && (nearest_shape == NULL || minimum_t > t)) {
                     nearest_shape = now_shape;
                     minimum_t = t;
@@ -88,7 +86,7 @@ int main(void) {
             }
 
             // パラメータ
-            //t_color ii = (t_color){1.0, 1.0, 1.0}; // 光源の光の強度
+            // t_color ii = (t_color){1.0, 1.0, 1.0}; // 光源の光の強度
 
             // 光の強度
             t_color intensity = (t_color){0.0, 0.0, 0.0};
@@ -98,8 +96,8 @@ int main(void) {
                 while (now_light) {
                     // 環境光
                     if (now_light->kind == AMBIENT_LIGHT) {
-                        t_color ia = color_mult_num(now_light->color,
-                                                    now_light->intensity / 255.0);
+                        t_color ia = color_mult_num(
+                            now_light->color, now_light->intensity / 255.0);
                         t_color radience_amb =
                             color_mult_color(ia, nearest_shape->ka);
                         intensity = color_add_color(intensity, radience_amb);
@@ -109,6 +107,30 @@ int main(void) {
                         // 交差位置: 球面上の点 P = O + tD
                         t_vec3d int_pos = vec3d_add(
                             camera->pos, vec3d_mult(o_to_screen, minimum_t));
+
+                        // 付影処理
+                        bool flag = false;
+                        t_shape *loop_shape = world->shape_list;
+                        while (loop_shape) {
+                            if (loop_shape != nearest_shape) {
+                                double t = shape_get_intersection[loop_shape->kind](
+                                    vec3d_sub(now_light->pos, int_pos),
+                                    int_pos,
+                                    loop_shape);
+                                if (0.0 < t && t < 1.0)
+                                {
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                            loop_shape = loop_shape->next;
+                        }
+                        if (flag)
+                        {
+                            now_light = now_light->next;
+                            continue;
+                        }
+
                         // 入射ベクトル: 点光源 - 交差位置
                         //  -> 単位ベクトル
                         t_vec3d light_dir = vec3d_sub(now_light->pos, int_pos);
@@ -125,7 +147,8 @@ int main(void) {
                             normal = nearest_shape->oriental_normal;
                         normal = vec3d_mult(normal, 1.0 / vec3d_length(normal));
 
-						t_color ii = color_mult_num(now_light->color, now_light->intensity / 255.0);
+                        t_color ii = color_mult_num(
+                            now_light->color, now_light->intensity / 255.0);
 
                         // 拡散反射光 ----------------------------------------
                         // vec3d_dot(入射ベクトル, 法線ベクトル) =

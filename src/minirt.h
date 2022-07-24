@@ -43,6 +43,7 @@ typedef struct s_light {
 typedef enum e_shape_kind {
 	SPHERE,
 	PLANE,
+	CYLINDER,
 } t_shape_kind;
 
 typedef struct s_shape {
@@ -63,6 +64,12 @@ typedef struct s_shape {
 	// plane
 	t_vec3d			oriental_normal;
 	t_vec3d			point;
+
+	// cylinder
+	// t_vec3d			center;
+	// t_vec3d			oriental_normal;
+	// double			radius;
+	double				height;
 } t_shape;
 
 // camera

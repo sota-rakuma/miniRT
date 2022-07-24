@@ -54,7 +54,7 @@ int main(void) {
     double max_p = 1.0;
 
     // 交差判定をする関数ポインタの配列
-    double (*shape_get_intersection[])() = {with_sphere, with_plane};
+    double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
 
     // forで回す
     long y;
@@ -145,6 +145,10 @@ int main(void) {
                             normal = vec3d_sub(int_pos, nearest_shape->center);
                         else if (nearest_shape->kind == PLANE)
                             normal = nearest_shape->oriental_normal;
+                        else if (nearest_shape->kind == CYLINDER) {
+                            normal = vec3d_cross(vec3d_sub(int_pos, nearest_shape->center), nearest_shape->oriental_normal);
+                            normal = vec3d_cross(nearest_shape->oriental_normal, normal);
+                        }
                         normal = vec3d_mult(normal, 1.0 / vec3d_length(normal));
 
                         t_color ii = color_mult_num(

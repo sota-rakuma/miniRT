@@ -73,6 +73,25 @@ t_world	*world_init() {
 	}
 
 	{
+		t_shape *shape = malloc(sizeof(t_shape));
+		shape->kind = CYLINDER;
+		shape->oriental_normal = (t_vec3d){0, 1, 0};
+		shape->center = (t_vec3d){-2, -10, 20};
+		// shape->point = (t_vec3d){-1, -10, 10};
+		shape->color = (t_color){255.0, 0.0, 0.0};
+
+		shape->radius = 1;
+		shape->height = 2.0;
+
+        shape->ka = (t_color){0.01, 0.01, 0.01}; // 環境光反射係数
+        shape->kd = (t_color){0.69, 0.69, 0.0};   // 拡散反射係数
+        shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
+		shape->shininess = 8.0;                  //光沢度
+
+		world_add_shape(world, shape);
+	}
+
+	{
 		t_light *light = malloc(sizeof(t_light));
 		light->kind = AMBIENT_LIGHT;
 		light->intensity = 0.3;

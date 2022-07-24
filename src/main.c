@@ -39,7 +39,7 @@ int main(void) {
     t_camera *camera = world->camera;
 
     // 球
-    t_shape sp = *(world->shape_list);
+    //t_shape sp = *(world->shape_list);
 
     // 点光源
     t_light light = *(world->light_list);
@@ -52,6 +52,9 @@ int main(void) {
     screen_p.z = 0;
     double min_p = -1.0;
     double max_p = 1.0;
+
+    // 交差判定をする関数ポインタの配列
+    double  (*shape_get_intersection[])() = {with_sphere, with_plane};
 
     // forで回す
     long y;
@@ -69,34 +72,18 @@ int main(void) {
             // t_vec3d d = vec3d_sub(screen_p, world->camera.pos);
             t_vec3d o_to_screen = get_vec_camera_to_screen(world, screen_p);
             t_shape *now_shape = world->shape_list;
-            double minimum_t = -1;
+            double minimum_t = -1.0;
             t_shape *nearest_shape = NULL;
             while (now_shape) {
-                // 球の中心 - カメラ ベクトル
-                t_vec3d center_to_o = vec3d_sub(vec3d_camera(world->camera),
-                                                vec3d_sp_center(&sp));
-                // 判別式
-                double a = vec3d_dot(o_to_screen, o_to_screen);
-                double b = 2 * vec3d_dot(o_to_screen, center_to_o);
-                double c =
-                    vec3d_dot(center_to_o, center_to_o) - sp.radius * sp.radius;
-                double discriminant = b * b - 4 * a * c;
-
-                double t = -1;
-                if (discriminant == 0)
-                    t = -b / (2 * a);
-                else if (discriminant > 0) {
-                    double t1 = (-b - sqrt(discriminant)) / (2 * a);
-                    double t2 = (-b + sqrt(discriminant)) / (2 * a);
-                    double t_min = t1 > t2 ? t2 : t1;
-                    double t_max = t1 > t2 ? t1 : t2;
-                    t = t1 > 0 && t2 > 0 ? t_min : t_max;
-                }
-                if (t >= 1 && (nearest_shape == NULL || minimum_t > t)) {
+                double t = -1.0;
+                t = shape_get_intersection[now_shape->kind](
+                        o_to_screen,
+                        world->camera,
+                        now_shape);
+                if (t >= 1.0 && (nearest_shape == NULL || minimum_t > t)) {
                     nearest_shape = now_shape;
                     minimum_t = t;
                 }
-
                 now_shape = now_shape->next;
             }
 
@@ -127,9 +114,15 @@ int main(void) {
                         t_vec3d light_dir = vec3d_sub(now_light->pos, int_pos);
                         light_dir = vec3d_mult(light_dir,
                                                1.0 / vec3d_length(light_dir));
-                        // 法線ベクトル: 交差位置(球面上の点) - 球中心
+
+                        t_vec3d normal;
+                        // 法線ベクトル[球]     : 交差位置(球面上の点) - 球中心
+                        // 法線ベクトル[平面]   : t_shapeの要素
                         //  -> 単位ベクトル
-                        t_vec3d normal = vec3d_sub(int_pos, sp.center);
+                        if (nearest_shape->kind == SPHERE)
+                            normal = vec3d_sub(int_pos, nearest_shape->center);
+                        else if (nearest_shape->kind == PLANE)
+                            normal = nearest_shape->oriental_normal;
                         normal = vec3d_mult(normal, 1.0 / vec3d_length(normal));
 
 						t_color ii = color_mult_num(now_light->color, now_light->intensity / 255.0);

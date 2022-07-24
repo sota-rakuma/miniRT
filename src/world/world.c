@@ -25,15 +25,47 @@ t_world	*world_init() {
 	world->camera = malloc(sizeof(t_camera));
 	*(world->camera) = (t_camera){(t_vec3d){0, 0, -5}, 0.0};
 
+
+
 	{
 		t_shape *shape = malloc(sizeof(t_shape));
 		shape->kind = SPHERE;
-		shape->center = (t_vec3d){0, 0, 5};
+		shape->center = (t_vec3d){0, 0, 10};
 		shape->radius = 1.0;
 		shape->color = (t_color){255.0, 0.0, 0.0};
 
         shape->ka = (t_color){0.01, 0.01, 0.01}; // 環境光反射係数
         shape->kd = (t_color){0.69, 0.0, 0.0};   // 拡散反射係数
+        shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
+		shape->shininess = 8.0;                  // 光沢度
+
+		world_add_shape(world, shape);
+	}
+
+	{
+		t_shape *shape = malloc(sizeof(t_shape));
+		shape->kind = SPHERE;
+		shape->center = (t_vec3d){1, 0, 15};
+		shape->radius = 1.0;
+		shape->color = (t_color){255.0, 0.0, 0.0};
+
+        shape->ka = (t_color){0.01, 0.01, 0.01}; // 環境光反射係数
+        shape->kd = (t_color){0.0, 0.0, 0.69};   // 拡散反射係数
+        shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
+		shape->shininess = 8.0;                  //光沢度
+
+		world_add_shape(world, shape);
+	}
+
+	{
+		t_shape *shape = malloc(sizeof(t_shape));
+		shape->kind = PLANE;
+		shape->oriental_normal = (t_vec3d){0, 1, 0};
+		shape->point = (t_vec3d){0, -1, 0};
+		shape->color = (t_color){255.0, 0.0, 0.0};
+
+        shape->ka = (t_color){0.01, 0.01, 0.01}; // 環境光反射係数
+        shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
 		shape->shininess = 8.0;                  //光沢度
 
@@ -52,6 +84,15 @@ t_world	*world_init() {
 		t_light *light = malloc(sizeof(t_light));
 		light->kind = LIGHT;
 		light->pos = (t_vec3d){-5.0, 5.0, -5.0};
+		light->color = (t_color){255.0, 255.0, 255.0};
+		light->intensity = 0.6;
+		world_add_light(world, light);
+	}
+
+	{
+		t_light *light = malloc(sizeof(t_light));
+		light->kind = LIGHT;
+		light->pos = (t_vec3d){5.0, 20.0, 5.0};
 		light->color = (t_color){255.0, 255.0, 255.0};
 		light->intensity = 0.6;
 		world_add_light(world, light);

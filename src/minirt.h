@@ -42,6 +42,7 @@ typedef struct s_light {
 // shape
 typedef enum e_shape_kind {
 	SPHERE,
+	PLANE,
 } t_shape_kind;
 
 typedef struct s_shape {
@@ -58,6 +59,10 @@ typedef struct s_shape {
 	// sphere
 	t_vec3d			center;
 	double			radius;
+
+	// plane
+	t_vec3d			oriental_normal;
+	t_vec3d			point;
 } t_shape;
 
 // camera
@@ -75,6 +80,7 @@ typedef struct s_world {
 
 #include "screen/screen.h"
 #include "util/util.h"
+#include "shape/shape.h"
 #include "world/world.h"
 
-#endif
+#endif /* MINIRT_H */

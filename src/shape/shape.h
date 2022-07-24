@@ -3,24 +3,7 @@
 
 #include "../minirt.h"
 
-typedef enum e_shape_type
-{
-	SP,
-}			t_shape_type;
-
-typedef struct s_rad
-{
-	t_color	amb;
-	t_color	dif;
-	t_color	spec;
-}	t_rad;
-
-typedef struct s_shape
-{
-	struct s_shape	*next;
-	t_shape_type	type;
-	t_rad			coef;
-	double			shineness;
-}	t_shape;
+double with_sphere(t_vec3d o_to_screen, t_camera *camera, t_shape *shape);
+double with_plane(t_vec3d o_to_screen, t_camera *camera, t_shape *shape);
 
 #endif /* SHAPE_H */

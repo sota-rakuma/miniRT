@@ -19,7 +19,7 @@ t_vec3d vec3d_sp_center(t_shape *shape) {
     return (shape->center);
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
     void *mlx = mlx_init();
     if (mlx == NULL) {
         printf("initialized mlx error\n");
@@ -33,7 +33,9 @@ int main(void) {
     int width = WIDTH;
 
     // ファイルをパース
-    t_world *world = world_init();
+    t_world *world = world_init(argv[1]);
+    //t_world *world = world_init("rtfiles/basic_cylinder.rt");
+    //t_world *world = world_init("rtfiles/tmp_1.rt");
 
     // 視点の位置を決める
     t_camera *camera = world->camera;
@@ -59,12 +61,17 @@ int main(void) {
     // forで回す
     long y;
     long x;
+    double dx = camera->screen_width / (double)WIDTH;
+    double dy = camera->screen_height / (double)HEIGHT;
     y = 0;
-    while (y < height) {
-        screen_p.y = max_p - ((max_p - min_p) / (double)height * (double)y);
+    while (y < HEIGHT) {
+        t_vec3d screen_p_yaxis = vec3d_add(camera->screen_start_pos, vec3d_mult(camera->screen_vertical_normal, dy * (double)y));
+        // screen_p.y = max_p - ((max_p - min_p) / (double)HEIGHT * (double)y);
+
         x = 0;
-        while (x < width) {
-            screen_p.x = (max_p - min_p) / (double)width * (double)x + min_p;
+        while (x < WIDTH) {
+            screen_p = vec3d_add(screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal, dx * (double)x));
+            // screen_p.x = (max_p - min_p) / (double)WIDTH * (double)x + min_p;
 
             // カメラから一番近いshapeを取得する--------------------------
             // 視線ベクトル

@@ -47,7 +47,7 @@ double with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
     // |(O x v) + t(D x v) - (C x v)|^2 = radius^2
     // a = (D x v)^2
     // b = 2 * (D x v)dot((O x v) - (C x v))
-    //   = 2 ((D x v)dot(O x v) - (D x v)dot(C x v)) 
+    //   = 2 ((D x v)dot(O x v) - (D x v)dot(C x v))
     // c = (O x v)^2 - 2 * (O x v)dot(C x v) + (C x v)^2 - radius^2
 
     t_vec3d v = vec3d_mult(shape->oriental_normal, 1.0 / vec3d_length(shape->oriental_normal));
@@ -56,12 +56,13 @@ double with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
     t_vec3d c_cross_v = vec3d_cross(shape->center, v);
 
     t_vec3d center = vec3d_add(shape->center, vec3d_mult(v, shape->height / 2.0));
+
     double max_length = sqrt(pow(shape->height / 2, 2) + pow(shape->radius, 2));
 
     double a = vec3d_dot(d_cross_v, d_cross_v);
     double b = 2.0 * (vec3d_dot(d_cross_v, o_cross_v) - vec3d_dot(d_cross_v, c_cross_v));
     double c = vec3d_dot(o_cross_v, o_cross_v) - 2.0 * vec3d_dot(o_cross_v, c_cross_v) + vec3d_dot(c_cross_v, c_cross_v) - shape->radius * shape->radius;
-    
+
     double t = -1;
 
     double discriminant = b * b - 4.0 * a * c;

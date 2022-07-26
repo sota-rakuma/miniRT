@@ -1,5 +1,5 @@
 CC:=cc
-CFLAGS:=#-Wall -Wextra -Werror
+CFLAGS:=-O2#-Wall -Wextra -Werror
 NAME:=miniRT
 
 SRC := $(wildcard src/*.c) $(wildcard src/*/*.c)

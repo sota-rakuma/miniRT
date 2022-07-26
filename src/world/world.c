@@ -107,6 +107,12 @@ void world_parse(t_world *world, char *filename) {
 			break;
 		row++;
 
+		if(line[0] == '\0')
+		{
+			free(line);
+			continue;
+		}
+
 		//スペース区切り
 		char **strs = ft_split(line, ' ');
 
@@ -164,7 +170,6 @@ void world_parse(t_world *world, char *filename) {
 				printf("column error: %ld\n", row);
 				exit(1);
 			}
-
  		}
 		// Sphere
 		else if (ft_strcmp(strs[0], "sp") == 0) {
@@ -180,7 +185,7 @@ void world_parse(t_world *world, char *filename) {
 			shape->radius =	parse_num(strs[i++]) / 2.0;
 			shape->color = parse_color(strs[i++]);
 
-			shape->ka = (t_color){1.0, 1.0, 1.0}; // 環境光反射係数
+			shape->ka = color_mult_num(shape->color, 1.0 / 255.0); // 環境光反射係数
         	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         	// shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         	shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
@@ -205,7 +210,7 @@ void world_parse(t_world *world, char *filename) {
 			shape->oriental_normal = parse_vec3d(strs[i++]);
 			shape->color = parse_color(strs[i++]);
 
-			shape->ka = (t_color){1.0, 1.0, 1.0}; // 環境光反射係数
+			shape->ka = color_mult_num(shape->color, 1.0 / 255.0); // 環境光反射係数
         	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         	// shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         	shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
@@ -228,7 +233,7 @@ void world_parse(t_world *world, char *filename) {
 			shape->height =	parse_num(strs[i++]);
 			shape->color = parse_color(strs[i++]);
 
-			shape->ka = (t_color){1.0, 1.0, 1.0}; // 環境光反射係数
+			shape->ka = color_mult_num(shape->color, 1.0 / 255.0); // 環境光反射係数
         	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         	// shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         	shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
@@ -239,6 +244,7 @@ void world_parse(t_world *world, char *filename) {
 			printf("not exist keyword: %s", strs[0]);
 			exit(1);
 		}
+		free(line);
 	}
 
 	if (!world_check(world)) {
@@ -320,7 +326,7 @@ t_world	*world_init(char *filename) {
 		shape->radius = 1.0;
 		shape->color = (t_color){255.0, 0.0, 0.0};
 
-        shape->ka = (t_color){1.0, 1.0, 1.0}; // 環境光反射係数
+        shape->ka = color_mult_num(shape->color, 1.0 / 255.0); // 環境光反射係数
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.69, 0.0, 0.0};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
@@ -336,7 +342,7 @@ t_world	*world_init(char *filename) {
 		shape->radius = 1.0;
 		shape->color = (t_color){0.0, 0.0, 255.0};
 
-        shape->ka = (t_color){1.0, 1.0, 1.0}; // 環境光反射係数
+        shape->ka = color_mult_num(shape->color, 1.0 / 255.0); // 環境光反射係数
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.0, 0.0, 0.69};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
@@ -352,7 +358,7 @@ t_world	*world_init(char *filename) {
 		shape->point = (t_vec3d){0, -1, 0};
 		shape->color = (t_color){0.0, 255.0, 0.0};
 
-        shape->ka = (t_color){1.0, 1.0, 1.0}; // 環境光反射係数
+        shape->ka = color_mult_num(shape->color, 1.0 / 255.0); // 環境光反射係数
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
@@ -372,7 +378,7 @@ t_world	*world_init(char *filename) {
 		shape->radius = 1;
 		shape->height = 4.0;
 
-        shape->ka = (t_color){1.0, 1.0, 1.0}; // 環境光反射係数
+        shape->ka = color_mult_num(shape->color, 1.0 / 255.0); // 環境光反射係数
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.69, 0.69, 0.0};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数

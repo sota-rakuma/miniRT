@@ -8,3 +8,5 @@ obj
 *.dSYM
 
 miniRT
+rtfiles*
+test.sh

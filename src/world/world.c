@@ -184,7 +184,7 @@ void world_parse(t_world *world, char *filename) {
         	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         	// shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         	shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
-			shape->shininess = 8.0;                  //光沢度
+			shape->shininess = 16.0;                  //光沢度
 
 			// printf("shape: center: %f, %f, %f\n", shape->center.x, shape->center.y, shape->center.z);
 			// printf("shape: radius: %f\n", shape->radius);
@@ -209,7 +209,7 @@ void world_parse(t_world *world, char *filename) {
         	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         	// shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         	shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
-			shape->shininess = 8.0;                  //光沢度
+			shape->shininess = 16.0;                  //光沢度
 			world_add_shape(world, shape);
 		}
 		// Cylinder
@@ -232,7 +232,7 @@ void world_parse(t_world *world, char *filename) {
         	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         	// shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         	shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
-			shape->shininess = 8.0;                  //光沢度
+			shape->shininess = 16.0;                  //光沢度
 			world_add_shape(world, shape);
 		}
 		else {
@@ -324,7 +324,7 @@ t_world	*world_init(char *filename) {
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.69, 0.0, 0.0};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
-		shape->shininess = 8.0;                  // 光沢度
+		shape->shininess = 16.0;                  // 光沢度
 
 		// world_add_shape(world, shape);
 	}
@@ -340,7 +340,7 @@ t_world	*world_init(char *filename) {
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.0, 0.0, 0.69};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
-		shape->shininess = 8.0;                  //光沢度
+		shape->shininess = 16.0;                  //光沢度
 
 		// world_add_shape(world, shape);
 	}
@@ -356,7 +356,7 @@ t_world	*world_init(char *filename) {
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
-		shape->shininess = 8.0;                  //光沢度
+		shape->shininess = 16.0;                  //光沢度
 
 		// world_add_shape(world, shape);
 	}
@@ -376,7 +376,7 @@ t_world	*world_init(char *filename) {
         shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);   // 拡散反射係数
         // shape->kd = (t_color){0.69, 0.69, 0.0};   // 拡散反射係数
         shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
-		shape->shininess = 8.0;                  //光沢度
+		shape->shininess = 16.0;                  //光沢度
 
 		// world_add_shape(world, shape);
 	}

@@ -179,7 +179,7 @@ int main(int argc, char *argv[]) {
                                 vec3d_mult(normal, 2 * (cosA)), light_dir);
                             // 視線ベクトルの逆単位ベクトル
                             t_vec3d v = vec3d_mult(
-                                int_pos, -1.0 * 1.0 / vec3d_length(int_pos));
+                                o_to_screen, -1.0 * 1.0 / vec3d_length(o_to_screen));
                             // 視線ベクトルの逆単位ベクトルと正反射ベクトルの内積
                             double v_dot_r = vec3d_dot(v, r);
                             v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;

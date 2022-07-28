@@ -281,19 +281,19 @@ t_world	*world_init(char *filename) {
 		// カメラからスクリーンの距離
 		double d = 1.0;
 		// スクリーン中心から端までの距離
-		double horizen_d = d * tan(camera->fov / 2.0);
-		double vertical_d = horizen_d * (double)HEIGHT / (double)WIDTH;
+		double horizon_d = d * tan(camera->fov / 2.0);
+		double vertical_d = horizon_d * (double)HEIGHT / (double)WIDTH;
 
 		camera->screen_height = 2.0 * vertical_d;
-		camera->screen_width = 2.0 * horizen_d;
+		camera->screen_width = 2.0 * horizon_d;
 
 		// スクリーンの左右両端の点を求める--------------------------
 		// カメラからnormal方向にdだけ離れた位置の点
 		t_vec3d screen_center_pos = vec3d_add(camera->pos, vec3d_mult(camera->normal, d));
 
 		// 横幅のずらす距離
-		t_vec3d screen_left_pos = vec3d_add(screen_center_pos, (t_vec3d){-1 * horizen_d, 0, 0});
-		t_vec3d screen_right_pos = vec3d_add(screen_center_pos, (t_vec3d){horizen_d, 0, 0});
+		t_vec3d screen_left_pos = vec3d_add(screen_center_pos, (t_vec3d){-1 * horizon_d, 0, 0});
+		t_vec3d screen_right_pos = vec3d_add(screen_center_pos, (t_vec3d){horizon_d, 0, 0});
 
 		// スクリーンの左上、右上、左下の点を求める-----------------
 		t_vec3d screen_o_to_left = vec3d_sub(screen_left_pos, screen_center_pos);
@@ -304,6 +304,12 @@ t_world	*world_init(char *filename) {
 		camera->screen_start_pos = vec3d_sub(screen_left_pos, vec3d_mult(vertical_normal, vertical_d));
 		camera->screen_horizon_normal = (t_vec3d){1, 0, 0};
 		camera->screen_vertical_normal = vec3d_mult(vertical_normal, 1.0 / vec3d_length(vertical_normal));
+
+		if (camera->fov == 0.0) {
+			camera->screen_start_pos = screen_center_pos;
+			camera->screen_horizon_normal = (t_vec3d){0, 0, 0};
+			camera->screen_vertical_normal = (t_vec3d){0, 0, 0};
+		}
 
 		// サンプル
 		// camera->screen_width = 2.0;

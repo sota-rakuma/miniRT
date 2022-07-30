@@ -112,8 +112,8 @@ int main(int argc, char *argv[]) {
                         // 付影処理
                         bool flag = false;
                         t_shape *loop_shape = world->shape_list;
+                        t_vec3d int_to_light_dir = vec3d_sub(now_light->pos, int_pos);
                         while (loop_shape) {
-                            t_vec3d int_to_light_dir = vec3d_sub(now_light->pos, int_pos);
                             double t = shape_get_intersection[loop_shape->kind](
                                 int_to_light_dir,
                                 vec3d_add(int_pos, vec3d_mult(int_to_light_dir, 0.000000001 / vec3d_length(int_to_light_dir))),

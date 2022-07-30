@@ -116,7 +116,7 @@ void	world_parse_camera(t_world *world, char **strs, long row)
 
 void	world_parse_light(t_world *world, char **strs, long row)
 {
-	if (check_strs_len(strs, 3))
+	if (!check_strs_len(strs, 3))
 	{
 		t_light *light = malloc(sizeof(t_light));
 		light->kind = LIGHT;
@@ -147,10 +147,6 @@ void world_parse_sphere(t_world *world, char **strs, long row) {
     // shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
     shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
 	shape->shininess = 16.0;                  //光沢度
-
-	// printf("shape: center: %f, %f, %f\n", shape->center.x, shape->center.y, shape->center.z);
-	// printf("shape: radius: %f\n", shape->radius);
-	// printf("shape: color: %f, %f, %f\n", shape->color.r, shape->color.g, shape->color.b);
 	world_add_shape(world, shape);
 }
 

@@ -25,7 +25,6 @@ int main(int argc, char *argv[]) {
         printf("initialized mlx error\n");
         exit(0);
     }
-    // void *win = win_init(mlx, "hello world");
 
     t_screen *screen = screen_init("miniRT");
 
@@ -34,14 +33,10 @@ int main(int argc, char *argv[]) {
 
     // ファイルをパース
     t_world *world = world_init(argv[1]);
-    //t_world *world = world_init("rtfiles/basic_cylinder.rt");
-    //t_world *world = world_init("rtfiles/tmp_1.rt");
+    camera_set(world->camera);
 
     // 視点の位置を決める
     t_camera *camera = world->camera;
-
-    // 球
-    // t_shape sp = *(world->shape_list);
 
     // 点光源
     t_light light = *(world->light_list);
@@ -61,16 +56,15 @@ int main(int argc, char *argv[]) {
     // forで回す
     long y;
     long x;
-    double dx = camera->screen_width / (double)WIDTH;
-    double dy = camera->screen_height / (double)HEIGHT;
+
     y = 0;
     while (y < HEIGHT) {
-        t_vec3d screen_p_yaxis = vec3d_add(camera->screen_start_pos, vec3d_mult(camera->screen_vertical_normal, dy * (double)y));
+        t_vec3d screen_p_yaxis = vec3d_add(camera->screen_start_pos, vec3d_mult(camera->screen_vertical_normal, camera->dy * (double)y));
         // screen_p.y = max_p - ((max_p - min_p) / (double)HEIGHT * (double)y);
 
         x = 0;
         while (x < WIDTH) {
-            screen_p = vec3d_add(screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal, dx * (double)x));
+            screen_p = vec3d_add(screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal, camera->dx * (double)x));
             // screen_p.x = (max_p - min_p) / (double)WIDTH * (double)x + min_p;
 
             // カメラから一番近いshapeを取得する--------------------------

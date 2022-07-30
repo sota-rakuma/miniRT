@@ -13,6 +13,7 @@
 
 #include "vec3d/vec3d.h"
 #include "color/color.h"
+#include "camera/camera.h"
 
 typedef struct s_sphere {
 	t_vec3d center;
@@ -72,20 +73,6 @@ typedef struct s_shape {
 	// double			radius;
 	double				height;
 } t_shape;
-
-// camera
-typedef struct s_camera {
-	t_vec3d	pos;
-	t_vec3d normal;
-	double	fov;
-
-	// スクリーンの左上（スタートポジション）
-	t_vec3d screen_start_pos;
-	t_vec3d screen_vertical_normal;
-	t_vec3d screen_horizon_normal;
-	double screen_height;
-	double screen_width;
-} t_camera;
 
 typedef struct s_world {
 	t_light		*light_list;

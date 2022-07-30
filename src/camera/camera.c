@@ -3,11 +3,6 @@
 void	camera_set(t_camera *camera)
 {
 	{
-		//t_camera *camera= malloc(sizeof(t_camera));
-		//camera->pos = camera->pos;
-		//camera->normal = camera->normal;
-		//camera->fov = camera->fov;
-
 		// normalを単位ベクトルに変換
 		camera->normal = vec3d_mult(camera->normal, 1.0 / vec3d_length(camera->normal));
 		// fovをラジアンに変換

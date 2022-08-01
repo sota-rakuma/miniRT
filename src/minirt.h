@@ -1,8 +1,8 @@
 #ifndef MINIRT_H
 #define MINIRT_H
 
-#define WIDTH 100
-#define HEIGHT 100
+#define WIDTH 600
+#define HEIGHT 600
 
 #include <math.h>
 #include <stdio.h>
@@ -82,9 +82,12 @@ typedef struct s_world {
 	t_color		bg;
 } t_world;
 
+
 #include "screen/screen.h"
 #include "util/util.h"
 #include "shape/shape.h"
 #include "world/world.h"
+
+t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, double t, long count, t_vec3d pos);
 
 #endif /* MINIRT_H */

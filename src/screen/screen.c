@@ -32,7 +32,7 @@ t_screen	*screen_init(char *title)
 		exit(0);
 	}
 	screen->_win = win_init(screen->_mlx, title);
-	screen->_img = img_init(screen->_mlx, WIDTH, HEIGHT);
+	screen->_img = img_init(screen->_mlx, HEIGHT, WIDTH);
 	return (screen);
 }
 

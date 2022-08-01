@@ -1,3 +1,73 @@
+
+```c
+
+///////////////////////////////////////////////////
+// world
+///////////////////////////////////////////////////
+world_init() {
+}
+
+///////////////////////////////////////////////////
+// compute
+///////////////////////////////////////////////////
+compute_intersected_shape() {
+}
+
+compute_light() {
+	color = color{0, 0, 0}
+	if (compute_is_shadow())
+		return color
+	color_add(color, compute_diffuse())
+	color_add(color, compute_specular())
+	return color
+}
+
+compute_ambient_light() {
+	hoge()
+}
+
+compute_brightness() {
+	color color{0, 0, 0}
+	while (now_light) {
+		if (AMBIENT_LIGHT)
+			tmp = compute_ambient_light(now_light)
+		else if (LIGHT)
+			tmp = compute_light(now_light)
+		color_add_color(color, tmp)
+	}
+}
+
+compute_color_at_pixel() {
+	shape = compute_intersected_shape()
+	if (shape)
+		color = compute_brightness(shape)
+	else
+		color = background_color
+	return color
+}
+
+// main.c -----------------------------------------
+main() {
+	arg_check()
+	screen_init()
+	world_init()
+	camera_set()
+
+	while(y) {
+		while(x) {
+			// ピクセルの色を決めてる
+			t_color intensity = compute_color_at_pixel(x, y)
+			put_pixel_to_image(intensity, ...)
+		}
+	}
+	mlx_hooks()
+	mlx_loop()
+}
+```
+
+
+
+
 # design
 ```c
 // world構造体

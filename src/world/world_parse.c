@@ -116,7 +116,7 @@ void	world_parse_camera(t_world *world, char **strs, long row)
 
 void	world_parse_light(t_world *world, char **strs, long row)
 {
-	if (!check_strs_len(strs, 3))
+	if (check_strs_len(strs, 3))
 	{
 		t_light *light = malloc(sizeof(t_light));
 		light->kind = LIGHT;
@@ -126,6 +126,21 @@ void	world_parse_light(t_world *world, char **strs, long row)
 		light->intensity = parse_num(strs[i++]);
 		light->color = (t_color){255.0, 255.0, 255.0};
 		world_add_light(world, light);
+	}
+	else if (check_strs_len(strs, 4))
+	{
+		t_light *light = malloc(sizeof(t_light));
+		light->kind = LIGHT;
+
+		long i = 1;
+		light->pos = parse_vec3d(strs[i++]);
+		light->intensity = parse_num(strs[i++]);
+		light->color = parse_color(strs[i++]);
+		world_add_light(world, light);
+	}
+	else {
+		printf("column error: %ld\n", row);
+		exit(1);
 	}
 }
 

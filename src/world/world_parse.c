@@ -166,7 +166,7 @@ void world_parse_sphere(t_world *world, char **strs, long row) {
 }
 
 void world_parse_plane(t_world *world, char **strs, long row) {
-	if(!check_strs_len(strs, 4)) {
+	if(!check_strs_len(strs, 4) && (!check_strs_len(strs, 5) && ft_strcmp(strs[4], "mirror") == 0)) {
 		printf("column error: %ld\n", row);
 		exit(1);
 	}
@@ -183,6 +183,8 @@ void world_parse_plane(t_world *world, char **strs, long row) {
     // shape->kd = (t_color){0.0, 0.69, 0.0};   // 拡散反射係数
     shape->ks = (t_color){0.3, 0.3, 0.3};    // 鏡面反射係数
 	shape->shininess = 16.0;                  //光沢度
+	if (check_strs_len(strs, 5))
+		shape->is_mirror = true;
 	world_add_shape(world, shape);
 }
 

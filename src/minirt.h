@@ -1,8 +1,8 @@
 #ifndef MINIRT_H
 #define MINIRT_H
 
-#define WIDTH 600
-#define HEIGHT 600
+#define WIDTH 100
+#define HEIGHT 100
 
 #include <math.h>
 #include <stdio.h>
@@ -66,6 +66,7 @@ typedef struct s_shape {
 	// plane
 	t_vec3d			oriental_normal;
 	t_vec3d			point;
+	bool			is_mirror;
 
 	// cylinder
 	// t_vec3d			center;

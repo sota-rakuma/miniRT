@@ -86,6 +86,11 @@ int main(int argc, char *argv[]) {
                 now_shape = now_shape->next;
             }
 
+            // 鏡か？
+            if (nearest_shape && nearest_shape->is_mirror) {
+                
+            }
+
             // パラメータ
             // t_color ii = (t_color){1.0, 1.0, 1.0}; // 光源の光の強度
 

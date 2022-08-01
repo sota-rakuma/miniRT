@@ -19,13 +19,12 @@ t_vec3d vec3d_sp_center(t_shape *shape) {
     return (shape->center);
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
     void *mlx = mlx_init();
     if (mlx == NULL) {
         printf("initialized mlx error\n");
         exit(0);
     }
-    // void *win = win_init(mlx, "hello world");
 
     t_screen *screen = screen_init("miniRT");
 
@@ -33,13 +32,11 @@ int main(void) {
     int width = WIDTH;
 
     // ファイルをパース
-    t_world *world = world_init();
+    t_world *world = world_init(argv[1]);
+    camera_set(world->camera);
 
     // 視点の位置を決める
     t_camera *camera = world->camera;
-
-    // 球
-    t_shape sp = *(world->shape_list);
 
     // 点光源
     t_light light = *(world->light_list);
@@ -53,15 +50,22 @@ int main(void) {
     double min_p = -1.0;
     double max_p = 1.0;
 
+    // 交差判定をする関数ポインタの配列
+    double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
+
     // forで回す
     long y;
     long x;
+
     y = 0;
-    while (y < height) {
-        screen_p.y = max_p - ((max_p - min_p) / (double)height * (double)y);
+    while (y < HEIGHT) {
+        t_vec3d screen_p_yaxis = vec3d_add(camera->screen_start_pos, vec3d_mult(camera->screen_vertical_normal, camera->dy * (double)y));
+        // screen_p.y = max_p - ((max_p - min_p) / (double)HEIGHT * (double)y);
+
         x = 0;
-        while (x < width) {
-            screen_p.x = (max_p - min_p) / (double)width * (double)x + min_p;
+        while (x < WIDTH) {
+            screen_p = vec3d_add(screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal, camera->dx * (double)x));
+            // screen_p.x = (max_p - min_p) / (double)WIDTH * (double)x + min_p;
 
             // カメラから一番近いshapeを取得する--------------------------
             // 視線ベクトル
@@ -69,39 +73,21 @@ int main(void) {
             // t_vec3d d = vec3d_sub(screen_p, world->camera.pos);
             t_vec3d o_to_screen = get_vec_camera_to_screen(world, screen_p);
             t_shape *now_shape = world->shape_list;
-            double minimum_t = -1;
+            double minimum_t = -1.0;
             t_shape *nearest_shape = NULL;
             while (now_shape) {
-                // 球の中心 - カメラ ベクトル
-                t_vec3d center_to_o = vec3d_sub(vec3d_camera(world->camera),
-                                                vec3d_sp_center(&sp));
-                // 判別式
-                double a = vec3d_dot(o_to_screen, o_to_screen);
-                double b = 2 * vec3d_dot(o_to_screen, center_to_o);
-                double c =
-                    vec3d_dot(center_to_o, center_to_o) - sp.radius * sp.radius;
-                double discriminant = b * b - 4 * a * c;
-
-                double t = -1;
-                if (discriminant == 0)
-                    t = -b / (2 * a);
-                else if (discriminant > 0) {
-                    double t1 = (-b - sqrt(discriminant)) / (2 * a);
-                    double t2 = (-b + sqrt(discriminant)) / (2 * a);
-                    double t_min = t1 > t2 ? t2 : t1;
-                    double t_max = t1 > t2 ? t1 : t2;
-                    t = t1 > 0 && t2 > 0 ? t_min : t_max;
-                }
-                if (t >= 1 && (nearest_shape == NULL || minimum_t > t)) {
+                double t = -1.0;
+                t = shape_get_intersection[now_shape->kind](
+                    o_to_screen, vec3d_camera(world->camera), now_shape);
+                if (t >= 1.0 && (nearest_shape == NULL || minimum_t > t)) {
                     nearest_shape = now_shape;
                     minimum_t = t;
                 }
-
                 now_shape = now_shape->next;
             }
 
             // パラメータ
-            //t_color ii = (t_color){1.0, 1.0, 1.0}; // 光源の光の強度
+            // t_color ii = (t_color){1.0, 1.0, 1.0}; // 光源の光の強度
 
             // 光の強度
             t_color intensity = (t_color){0.0, 0.0, 0.0};
@@ -111,8 +97,8 @@ int main(void) {
                 while (now_light) {
                     // 環境光
                     if (now_light->kind == AMBIENT_LIGHT) {
-                        t_color ia = color_mult_num(now_light->color,
-                                                    now_light->intensity / 255.0);
+                        t_color ia = color_mult_num(
+                            now_light->color, now_light->intensity / 255.0);
                         t_color radience_amb =
                             color_mult_color(ia, nearest_shape->ka);
                         intensity = color_add_color(intensity, radience_amb);
@@ -122,17 +108,58 @@ int main(void) {
                         // 交差位置: 球面上の点 P = O + tD
                         t_vec3d int_pos = vec3d_add(
                             camera->pos, vec3d_mult(o_to_screen, minimum_t));
+
+                        // 付影処理
+                        bool flag = false;
+                        t_shape *loop_shape = world->shape_list;
+                        t_vec3d int_to_light_dir = vec3d_sub(now_light->pos, int_pos);
+                        while (loop_shape) {
+                            double t = shape_get_intersection[loop_shape->kind](
+                                int_to_light_dir,
+                                vec3d_add(int_pos, vec3d_mult(int_to_light_dir, 0.000000001 / vec3d_length(int_to_light_dir))),
+                                loop_shape);
+                            if (0.0 < t && t < 1.0)
+                            {
+                                flag = true;
+                                break;
+                            }
+                            loop_shape = loop_shape->next;
+                        }
+                        if (flag)
+                        {
+                            now_light = now_light->next;
+                            continue;
+                        }
+
                         // 入射ベクトル: 点光源 - 交差位置
                         //  -> 単位ベクトル
                         t_vec3d light_dir = vec3d_sub(now_light->pos, int_pos);
                         light_dir = vec3d_mult(light_dir,
                                                1.0 / vec3d_length(light_dir));
-                        // 法線ベクトル: 交差位置(球面上の点) - 球中心
+
+                        t_vec3d normal;
+                        // 法線ベクトル[球]     : 交差位置(球面上の点) - 球中心
+                        // 法線ベクトル[平面]   : t_shapeの要素
                         //  -> 単位ベクトル
-                        t_vec3d normal = vec3d_sub(int_pos, sp.center);
+                        if (nearest_shape->kind == SPHERE)
+                            normal = vec3d_sub(int_pos, nearest_shape->center);
+                        else if (nearest_shape->kind == PLANE)
+                            normal = nearest_shape->oriental_normal;
+                        else if (nearest_shape->kind == CYLINDER) {
+                            normal = vec3d_cross(vec3d_sub(int_pos, nearest_shape->center), nearest_shape->oriental_normal);
+                            normal = vec3d_cross(nearest_shape->oriental_normal, normal);
+                        }
+                        // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
+                        // 視線ベクトルの逆単位ベクトル
+                        t_vec3d v = vec3d_mult(
+                                o_to_screen, -1.0 * 1.0 / vec3d_length(o_to_screen));
+                        if (vec3d_dot(v, normal) <= 0.0){
+                            normal = vec3d_mult(normal, -1.0);
+                        }
                         normal = vec3d_mult(normal, 1.0 / vec3d_length(normal));
 
-						t_color ii = color_mult_num(now_light->color, now_light->intensity / 255.0);
+                        t_color ii = color_mult_num(
+                            now_light->color, now_light->intensity / 255.0);
 
                         // 拡散反射光 ----------------------------------------
                         // vec3d_dot(入射ベクトル, 法線ベクトル) =
@@ -151,8 +178,8 @@ int main(void) {
                             t_vec3d r = vec3d_sub(
                                 vec3d_mult(normal, 2 * (cosA)), light_dir);
                             // 視線ベクトルの逆単位ベクトル
-                            t_vec3d v = vec3d_mult(
-                                int_pos, -1.0 * 1.0 / vec3d_length(int_pos));
+                            //t_vec3d v = vec3d_mult(
+                            //    o_to_screen, -1.0 * 1.0 / vec3d_length(o_to_screen));
                             // 視線ベクトルの逆単位ベクトルと正反射ベクトルの内積
                             double v_dot_r = vec3d_dot(v, r);
                             v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;

@@ -8,6 +8,7 @@ typedef struct s_vec3d {
 } t_vec3d;
 
 double vec3d_dot(t_vec3d a, t_vec3d b);
+t_vec3d vec3d_cross(t_vec3d a, t_vec3d b);
 t_vec3d vec3d_sub(t_vec3d a, t_vec3d b);
 t_vec3d vec3d_add(t_vec3d a, t_vec3d b);
 t_vec3d vec3d_mult(t_vec3d a, double n);

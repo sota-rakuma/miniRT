@@ -9,9 +9,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <mlx.h>
+#include "../libft/libft.h"
 
 #include "vec3d/vec3d.h"
 #include "color/color.h"
+#include "camera/camera.h"
 
 typedef struct s_sphere {
 	t_vec3d center;
@@ -42,6 +44,8 @@ typedef struct s_light {
 // shape
 typedef enum e_shape_kind {
 	SPHERE,
+	PLANE,
+	CYLINDER,
 } t_shape_kind;
 
 typedef struct s_shape {
@@ -58,13 +62,17 @@ typedef struct s_shape {
 	// sphere
 	t_vec3d			center;
 	double			radius;
-} t_shape;
 
-// camera
-typedef struct s_camera {
-	t_vec3d	pos;
-	double	fov;
-} t_camera;
+	// plane
+	t_vec3d			oriental_normal;
+	t_vec3d			point;
+
+	// cylinder
+	// t_vec3d			center;
+	// t_vec3d			oriental_normal;
+	// double			radius;
+	double				height;
+} t_shape;
 
 typedef struct s_world {
 	t_light		*light_list;
@@ -75,6 +83,7 @@ typedef struct s_world {
 
 #include "screen/screen.h"
 #include "util/util.h"
+#include "shape/shape.h"
 #include "world/world.h"
 
-#endif
+#endif /* MINIRT_H */

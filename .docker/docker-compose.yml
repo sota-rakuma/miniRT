@@ -8,13 +8,10 @@ services:
     working_dir: "/home/miniRT"
     #ports:
     volumes:
-      - ../src:/home/miniRT/src
-      - ../minilibx-linux:/home/miniRT/minilibx-linux
-      - ../libft:/home/miniRT/libft
+      - ..:/home/miniRT
       - ./mlx_install.sh:/home/miniRT/mlx_install.sh
-      - ../Makefile:/home/miniRT/Makefile
     stdin_open: true
     tty: true
     environment:
-      - DISPLAY=172.22.1.41:0
+      - DISPLAY=172.22.4.14:0
     command: bash -c "chmod 777 /home/miniRT/mlx_install.sh&& /home/miniRT/mlx_install.sh && /home/miniRT/mlx_install.sh && /bin/bash -i"

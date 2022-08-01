@@ -5,5 +5,8 @@
 a.out
 tmp*
 obj
+*.dSYM
 
 miniRT
+rtfiles*
+test.sh

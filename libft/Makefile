@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 17:18:54 by srakuma           #+#    #+#              #
-#    Updated: 2022/07/13 02:42:42 by rnishimo         ###   ########.fr        #
+#    Updated: 2022/07/26 19:36:43 by srakuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SRCS = ft_strlen.c \
 		ft_strchr.c \
 		ft_strrchr.c \
 		ft_strnstr.c \
+		ft_strcmp.c \
 		ft_strncmp.c \
 		ft_memset.c \
 		ft_bzero.c \

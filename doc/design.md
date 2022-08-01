@@ -1,3 +1,73 @@
+
+```c
+
+///////////////////////////////////////////////////
+// world
+///////////////////////////////////////////////////
+world_init() {
+}
+
+///////////////////////////////////////////////////
+// compute
+///////////////////////////////////////////////////
+compute_intersected_shape() {
+}
+
+compute_light() {
+	color = color{0, 0, 0}
+	if (compute_is_shadow())
+		return color
+	color_add(color, compute_diffuse())
+	color_add(color, compute_specular())
+	return color
+}
+
+compute_ambient_light() {
+	hoge()
+}
+
+compute_brightness() {
+	color color{0, 0, 0}
+	while (now_light) {
+		if (AMBIENT_LIGHT)
+			tmp = compute_ambient_light(now_light)
+		else if (LIGHT)
+			tmp = compute_light(now_light)
+		color_add_color(color, tmp)
+	}
+}
+
+compute_color_at_pixel() {
+	shape = compute_intersected_shape()
+	if (shape)
+		color = compute_brightness(shape)
+	else
+		color = background_color
+	return color
+}
+
+// main.c -----------------------------------------
+main() {
+	arg_check()
+	screen_init()
+	world_init()
+	camera_set()
+
+	while(y) {
+		while(x) {
+			// ピクセルの色を決めてる
+			t_color intensity = compute_color_at_pixel(x, y)
+			put_pixel_to_image(intensity, ...)
+		}
+	}
+	mlx_hooks()
+	mlx_loop()
+}
+```
+
+
+
+
 # design
 ```c
 // world構造体
@@ -142,29 +212,32 @@ main()
 
 ```c
 // lightにかんするまとめ
-double light_get_ambient(light);
+t_color light_get_ambient(t_light *light, t_shape *shape)
 {
- 	return (light->ka * light->intensity);
+	return (shape->ka * light->intensity);
 }
 
-double light_get_diffuse(light, t_vec3d n, t_vec3d l)
+
+t_color light_get_diffuse(t_light *light, t_shape *shape, t_vec3d n, t_vec3d l)
 {
-	return (light->kd * light->intensity * dot(n, l));
+	return (shape->kd * light->intensity * dot (n, l));
 }
 
-double light_get_specular(light, t_vec3dn, t_vec3d d, t_vec3d l)
-{ 
-	t_vec3d v = vec_sub(vec_mult_num(n, 2 * dot(l, n)), l);
-	t_vec3d r = -d;
 
-	return (light->ks, pow( dot(v, r), light->shininess ));
+t_color light_get_specular(t_light *light, t_shape *shape, t_vec3d n, t_vec3d d, t_vec3d l)
+{
+	t_vec3d v = vec3d_sub(vec3d_mult(n, 2 * dot(l, n)), l);
+	t_vec3d r = vec3d_mult(d, -1);
+
+	return (color_mult_num(shape->ks, pow( dot(v, r), shape->shininess)));
 }
 
-double get_inensity(world)
+
+t_color get_inensity(t_world *world)
 {
 	t_light *now_light = world->light_lists;
 	double intensity = 0.0;
-	
+
 	while (now_light)
 	{
 		if (light->kind == AMBIENT_LIGHT)
@@ -178,7 +251,15 @@ double get_inensity(world)
 		now_light = now_light->next;
 	}
 
-	// わんちゃん　intensity をノーマライずした値を返す必要がありそう
+	// わんちゃん intensity をノーマライずした値を返す必要がありそう
 	return (intensity);
 }
+```
+
+```c
+// 交差判定の関数
+// 例えば、パースの時点でtypeを識別する際にそのtypeに応じた交差判定の関数ポインタを代入しておくのはどうか。
+
+// そうすれば、やることはworld->shape->f(); だけでよさそうかなー？
+// 引数が違うと呼び出しの際も場合分けをする or shape構造体をまた引数に渡すかしないといけない
 ```

@@ -6,7 +6,7 @@
 /*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 18:36:19 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/03 18:37:53 by rnishimo         ###   ########.fr       */
+/*   Updated: 2022/08/03 18:40:02 by rnishimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ t_vec3d	vec3d_mult(t_vec3d a, double n);
 
 // vec3d_utils1.c
 double	vec3d_length(t_vec3d a);
+t_vec3d	vec3d_unit(t_vec3d a);
 
 #endif /* VEC3D_H */

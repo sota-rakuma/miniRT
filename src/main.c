@@ -8,13 +8,6 @@ int key_event(int key_code, void *param)
     return (0);
 }
 
-t_vec3d get_vec_camera_to_screen(t_world *world, t_vec3d to_screen)
-{
-    return (vec3d_sub(to_screen, world->camera->pos));
-}
-
-
-
 int main(int argc, char *argv[])
 {
     void *mlx = mlx_init();
@@ -37,7 +30,6 @@ int main(int argc, char *argv[])
 
     // スクリーン上の点
     t_vec3d to_screen;
-    to_screen.z = 0;
 
     // 交差判定をする関数ポインタの配列
     double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
@@ -56,7 +48,7 @@ int main(int argc, char *argv[])
             to_screen = vec3d_add(screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal, camera->dx * (double)x));
             // カメラから一番近いshapeを取得する--------------------------
             // 視線ベクトル
-            t_vec3d o_to_screen = get_vec_camera_to_screen(world, to_screen);
+            t_vec3d o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
             t_shape *now_shape = world->shape_list;
             double minimum_t = -1.0;
             t_shape *nearest_shape = NULL;

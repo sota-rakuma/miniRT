@@ -169,16 +169,9 @@ int main(int argc, char *argv[]) {
                             //正反射ベクトル
                             t_vec3d r = vec3d_sub(
                                 vec3d_mult(normal, 2 * (cosA)), pos_to_light_dir);
-                            // 視線ベクトルの逆単位ベクトル
-                            // t_vec3d v = vec3d_mult(
-                            //    o_to_screen, -1.0 * 1.0 /
-                            //    vec3d_length(o_to_screen));
-                            // 視線ベクトルの逆単位ベクトルと正反射ベクトルの内積
-                            double v_dot_r = vec3d_dot(v, r);
-                            v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;
                             radience_spe = color_mult_num(
                                 color_mult_color(intersected_shape->ks, ii),
-                                pow(v_dot_r, intersected_shape->shininess));
+                                pow(double_max(vec3d_dot(v, r), 0.0), intersected_shape->shininess));
                         }
                         intensity = color_add_color(intensity, radience_spe);
                     }

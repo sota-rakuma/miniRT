@@ -72,23 +72,9 @@ int main(int argc, char *argv[])
             // カメラから一番近いshapeを取得する--------------------------
             // 視線ベクトル
             t_vec3d o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
-            t_shape *now_shape = world->shape_list;
-            double minimum_t = -1.0;
-            t_shape *intersected_shape = NULL;
-            while (now_shape)
-            {
-                double t = -1.0;
-                t = shape_get_intersection(
-                    o_to_screen, vec3d_camera(world->camera), now_shape);
-                if (t >= 1.0 && (intersected_shape == NULL || minimum_t > t))
-                {
-                    intersected_shape = now_shape;
-                    minimum_t = t;
-                }
-                now_shape = now_shape->next;
-            }
-            intersected_shape = compute_intersected_shape(world, to_screen);
-            
+            t_shape *intersected_shape = compute_intersected_shape(world, to_screen);
+            double minimum_t = shape_get_intersection(o_to_screen, vec3d_camera(world->camera), intersected_shape);
+
             // // 鏡か？
             // if (intersected_shape && intersected_shape->is_mirror)
             // {

@@ -62,6 +62,14 @@ bool compute_is_shadow(t_world *world, t_shape *shape, t_light *light,
     return false;
 }
 
+// t_color compute_specular(t_shape *shape, t_light *light) {
+
+// }
+
+// t_color compute_diffuse(t_shape *shape, t_light *light) {
+
+// }
+
 t_color compute_light(t_world *world, t_vec3d to_screen, t_shape *shape,
                       t_light *light) {
     t_color intensity = (t_color){0.0, 0.0, 0.0};
@@ -70,13 +78,11 @@ t_color compute_light(t_world *world, t_vec3d to_screen, t_shape *shape,
     t_vec3d intersected_pos =
         compute_intersected_pos(world->camera, to_screen, shape);
     t_vec3d o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
-
     // 付影処理
     if (compute_is_shadow(world, shape, light, intersected_pos)) {
         light = light->next;
         return (t_color){0.0, 0.0, 0.0};
     }
-
     t_vec3d pos_to_light_dir =
         vec3d_unit(vec3d_sub(light->pos, intersected_pos));
     t_vec3d normal = shape_normal_vec(shape, intersected_pos);
@@ -86,20 +92,15 @@ t_color compute_light(t_world *world, t_vec3d to_screen, t_shape *shape,
     if (vec3d_dot(v, normal) <= 0.0) {
         normal = vec3d_mult(normal, -1.0);
     }
-    normal = vec3d_unit(normal);
-
     t_color ii = color_mult_num(light->color, light->intensity / 255.0);
-
     // 拡散反射光 ----------------------------------------
     // vec3d_dot(入射ベクトル, 法線ベクトル) =
     // |入射ベクトル||法線ベクトル|cosA
     //  = 1 * 1 * cosA = cosA
-    double cosA = vec3d_dot(pos_to_light_dir, normal);
-    cosA = cosA >= 0 ? cosA : 0.0;
+    double cosA = double_max(0.0, vec3d_dot(pos_to_light_dir, normal));
     t_color radience_dif =
         color_mult_num(color_mult_color(shape->kd, ii), cosA);
     intensity = color_add_color(intensity, radience_dif);
-
     // 鏡面反射光 ----------------------------------------
     t_color radience_spe = (t_color){0.0, 0.0, 0.0};
     if (cosA > 0) {

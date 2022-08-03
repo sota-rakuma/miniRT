@@ -36,6 +36,24 @@ t_color compute_ambient_light(t_world *world, t_shape *shape, t_light *light) {
     return radience_amb;
 }
 
+bool compute_is_shadow(t_world *world, t_shape *shape, t_light *light,
+                       t_vec3d intersected_pos) {
+    t_shape *now_shape = world->shape_list;
+    t_vec3d int_to_light_dir = vec3d_sub(light->pos, intersected_pos);
+    while (now_shape) {
+        double t = shape_get_intersection(
+            int_to_light_dir,
+            vec3d_add(intersected_pos,
+                      vec3d_mult(int_to_light_dir,
+                                 0.000000001 / vec3d_length(int_to_light_dir))),
+            now_shape);
+        if (0.0 < t && t < 1.0)
+            return true;
+        now_shape = now_shape->next;
+    }
+    return false;
+}
+
 int main(int argc, char *argv[]) {
     void *mlx = mlx_init();
     if (mlx == NULL) {
@@ -116,27 +134,8 @@ int main(int argc, char *argv[]) {
                             camera->pos, vec3d_mult(o_to_screen, minimum_t));
 
                         // 付影処理
-                        bool flag = false;
-                        t_shape *loop_shape = world->shape_list;
-                        t_vec3d int_to_light_dir =
-                            vec3d_sub(now_light->pos, int_pos);
-                        while (loop_shape) {
-                            double t = shape_get_intersection(
-                                int_to_light_dir,
-                                vec3d_add(
-                                    int_pos,
-                                    vec3d_mult(
-                                        int_to_light_dir,
-                                        0.000000001 /
-                                            vec3d_length(int_to_light_dir))),
-                                loop_shape);
-                            if (0.0 < t && t < 1.0) {
-                                flag = true;
-                                break;
-                            }
-                            loop_shape = loop_shape->next;
-                        }
-                        if (flag) {
+                        if (compute_is_shadow(world, intersected_shape,
+                                              now_light, int_pos)) {
                             now_light = now_light->next;
                             continue;
                         }

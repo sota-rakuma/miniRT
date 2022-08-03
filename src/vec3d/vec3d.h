@@ -6,7 +6,7 @@
 /*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 18:36:19 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/04 01:46:56 by rnishimo         ###   ########.fr       */
+/*   Updated: 2022/08/04 01:57:36 by rnishimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ typedef struct s_vec3d {
 	double	y;
 	double	z;
 }	t_vec3d;
+
+// vec3d_camera_to_screen.c
+t_vec3d	vec3d_camera_to_screen(t_camera *camera, t_vec3d to_screen);
 
 // vec3d_camera.c
 t_vec3d	vec3d_camera(t_camera *camera);

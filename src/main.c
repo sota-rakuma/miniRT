@@ -8,10 +8,12 @@ int key_event(int key_code, void *param)
     return (0);
 }
 
-t_vec3d get_vec_camera_to_screen(t_world *world, t_vec3d screen_p)
+t_vec3d get_vec_camera_to_screen(t_world *world, t_vec3d to_screen)
 {
-    return (vec3d_sub(screen_p, world->camera->pos));
+    return (vec3d_sub(to_screen, world->camera->pos));
 }
+
+
 
 int main(int argc, char *argv[])
 {
@@ -21,11 +23,7 @@ int main(int argc, char *argv[])
         printf("initialized mlx error\n");
         exit(0);
     }
-
     t_screen *screen = screen_init("miniRT");
-
-    int height = HEIGHT;
-    int width = WIDTH;
 
     // ファイルをパース
     t_world *world = world_init(argv[1]);
@@ -34,17 +32,12 @@ int main(int argc, char *argv[])
     // 視点の位置を決める
     t_camera *camera = world->camera;
 
-    // 点光源
-    t_light light = *(world->light_list);
-
     // 背景
     t_color bg = world->bg;
 
     // スクリーン上の点
-    t_vec3d screen_p;
-    screen_p.z = 0;
-    double min_p = -1.0;
-    double max_p = 1.0;
+    t_vec3d to_screen;
+    to_screen.z = 0;
 
     // 交差判定をする関数ポインタの配列
     double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
@@ -57,19 +50,13 @@ int main(int argc, char *argv[])
     while (y < HEIGHT)
     {
         t_vec3d screen_p_yaxis = vec3d_add(camera->screen_start_pos, vec3d_mult(camera->screen_vertical_normal, camera->dy * (double)y));
-        // screen_p.y = max_p - ((max_p - min_p) / (double)HEIGHT * (double)y);
-
         x = 0;
         while (x < WIDTH)
         {
-            screen_p = vec3d_add(screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal, camera->dx * (double)x));
-            // screen_p.x = (max_p - min_p) / (double)WIDTH * (double)x + min_p;
-
+            to_screen = vec3d_add(screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal, camera->dx * (double)x));
             // カメラから一番近いshapeを取得する--------------------------
             // 視線ベクトル
-            // t_vec3d d = vec3d_sub(screen_p, camera.pos);
-            // t_vec3d d = vec3d_sub(screen_p, world->camera.pos);
-            t_vec3d o_to_screen = get_vec_camera_to_screen(world, screen_p);
+            t_vec3d o_to_screen = get_vec_camera_to_screen(world, to_screen);
             t_shape *now_shape = world->shape_list;
             double minimum_t = -1.0;
             t_shape *nearest_shape = NULL;
@@ -86,17 +73,17 @@ int main(int argc, char *argv[])
                 now_shape = now_shape->next;
             }
 
-            // 鏡か？
-            if (nearest_shape && nearest_shape->is_mirror)
-            {
-                // printf("mirror\n");
-                t_vec3d pos = vec3d_add(world->camera->pos, vec3d_mult(o_to_screen, minimum_t));
-                t_color color = compute_mirror(world, nearest_shape, o_to_screen, minimum_t, 0, pos);
-                // printf("color{%.4f, %.4f, %.4f}\n", color.r, color.g, color.b);
-                img_pixel_put(screen->_img, x, y, convert_color(color));
-                x++;
-                continue;
-            }
+            // // 鏡か？
+            // if (nearest_shape && nearest_shape->is_mirror)
+            // {
+            //     // printf("mirror\n");
+            //     t_vec3d pos = vec3d_add(world->camera->pos, vec3d_mult(o_to_screen, minimum_t));
+            //     t_color color = compute_mirror(world, nearest_shape, o_to_screen, minimum_t, 0, pos);
+            //     // printf("color{%.4f, %.4f, %.4f}\n", color.r, color.g, color.b);
+            //     img_pixel_put(screen->_img, x, y, convert_color(color));
+            //     x++;
+            //     continue;
+            // }
 
             // パラメータ
             // t_color ii = (t_color){1.0, 1.0, 1.0}; // 光源の光の強度

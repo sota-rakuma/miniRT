@@ -62,4 +62,9 @@ fclean: clean
 
 re: fclean all
 
+bonus: all
+
+norm:
+	norminette src libft | grep Error! || echo ok
+
 .PHONY: all clean fclean re

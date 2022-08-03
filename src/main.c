@@ -8,6 +8,10 @@ int key_event(int key_code, void *param)
     return (0);
 }
 
+t_shape *compute_intersected_shape(t_world *world, t_vec3d to_screen) {
+    return NULL;
+}
+
 int main(int argc, char *argv[])
 {
     void *mlx = mlx_init();
@@ -51,26 +55,26 @@ int main(int argc, char *argv[])
             t_vec3d o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
             t_shape *now_shape = world->shape_list;
             double minimum_t = -1.0;
-            t_shape *nearest_shape = NULL;
+            t_shape *intersected_shape = NULL;
             while (now_shape)
             {
                 double t = -1.0;
                 t = shape_get_intersection[now_shape->kind](
                     o_to_screen, vec3d_camera(world->camera), now_shape);
-                if (t >= 1.0 && (nearest_shape == NULL || minimum_t > t))
+                if (t >= 1.0 && (intersected_shape == NULL || minimum_t > t))
                 {
-                    nearest_shape = now_shape;
+                    intersected_shape = now_shape;
                     minimum_t = t;
                 }
                 now_shape = now_shape->next;
             }
 
             // // 鏡か？
-            // if (nearest_shape && nearest_shape->is_mirror)
+            // if (intersected_shape && intersected_shape->is_mirror)
             // {
             //     // printf("mirror\n");
             //     t_vec3d pos = vec3d_add(world->camera->pos, vec3d_mult(o_to_screen, minimum_t));
-            //     t_color color = compute_mirror(world, nearest_shape, o_to_screen, minimum_t, 0, pos);
+            //     t_color color = compute_mirror(world, intersected_shape, o_to_screen, minimum_t, 0, pos);
             //     // printf("color{%.4f, %.4f, %.4f}\n", color.r, color.g, color.b);
             //     img_pixel_put(screen->_img, x, y, convert_color(color));
             //     x++;
@@ -83,7 +87,7 @@ int main(int argc, char *argv[])
             // 光の強度
             t_color intensity = (t_color){0.0, 0.0, 0.0};
 
-            if (minimum_t > 0)
+            if (intersected_shape)
             {
                 t_light *now_light = world->light_list;
                 while (now_light)
@@ -94,7 +98,7 @@ int main(int argc, char *argv[])
                         t_color ia = color_mult_num(
                             now_light->color, now_light->intensity / 255.0);
                         t_color radience_amb =
-                            color_mult_color(ia, nearest_shape->ka);
+                            color_mult_color(ia, intersected_shape->ka);
                         intensity = color_add_color(intensity, radience_amb);
                     }
                     // 点光源
@@ -137,14 +141,14 @@ int main(int argc, char *argv[])
                         // 法線ベクトル[球]     : 交差位置(球面上の点) - 球中心
                         // 法線ベクトル[平面]   : t_shapeの要素
                         //  -> 単位ベクトル
-                        if (nearest_shape->kind == SPHERE)
-                            normal = vec3d_sub(int_pos, nearest_shape->center);
-                        else if (nearest_shape->kind == PLANE)
-                            normal = nearest_shape->oriental_normal;
-                        else if (nearest_shape->kind == CYLINDER)
+                        if (intersected_shape->kind == SPHERE)
+                            normal = vec3d_sub(int_pos, intersected_shape->center);
+                        else if (intersected_shape->kind == PLANE)
+                            normal = intersected_shape->oriental_normal;
+                        else if (intersected_shape->kind == CYLINDER)
                         {
-                            normal = vec3d_cross(vec3d_sub(int_pos, nearest_shape->center), nearest_shape->oriental_normal);
-                            normal = vec3d_cross(nearest_shape->oriental_normal, normal);
+                            normal = vec3d_cross(vec3d_sub(int_pos, intersected_shape->center), intersected_shape->oriental_normal);
+                            normal = vec3d_cross(intersected_shape->oriental_normal, normal);
                         }
                         // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
                         // 視線ベクトルの逆単位ベクトル
@@ -166,7 +170,7 @@ int main(int argc, char *argv[])
                         double cosA = vec3d_dot(light_dir, normal);
                         cosA = cosA >= 0 ? cosA : 0.0;
                         t_color radience_dif = color_mult_num(
-                            color_mult_color(nearest_shape->kd, ii), cosA);
+                            color_mult_color(intersected_shape->kd, ii), cosA);
                         intensity = color_add_color(intensity, radience_dif);
 
                         // 鏡面反射光 ----------------------------------------
@@ -183,8 +187,8 @@ int main(int argc, char *argv[])
                             double v_dot_r = vec3d_dot(v, r);
                             v_dot_r = v_dot_r >= 0 ? v_dot_r : 0.0;
                             radience_spe = color_mult_num(
-                                color_mult_color(nearest_shape->ks, ii),
-                                pow(v_dot_r, nearest_shape->shininess));
+                                color_mult_color(intersected_shape->ks, ii),
+                                pow(v_dot_r, intersected_shape->shininess));
                         }
                         intensity = color_add_color(intensity, radience_spe);
                     }
@@ -196,7 +200,7 @@ int main(int argc, char *argv[])
             intensity = color_normalize(intensity);
 
             t_color screen_color;
-            if (minimum_t > 0)
+            if (intersected_shape)
             {
                 screen_color = color_mult_num(intensity, 255.0);
             }

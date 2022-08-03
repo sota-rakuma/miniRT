@@ -140,14 +140,7 @@ int main(int argc, char *argv[]) {
                             continue;
                         }
 
-                        // 入射ベクトル: 点光源 - 交差位置
-                        //  -> 単位ベクトル
-                        t_vec3d light_dir = vec3d_sub(now_light->pos, int_pos);
-                        light_dir = vec3d_unit(light_dir);
-
-                        // 法線ベクトル[球]     : 交差位置(球面上の点) - 球中心
-                        // 法線ベクトル[平面]   : t_shapeの要素
-                        //  -> 単位ベクトル
+                        t_vec3d pos_to_light = vec3d_unit(vec3d_sub(now_light->pos, int_pos));
                         t_vec3d normal = shape_normal_vec(intersected_shape, int_pos);
                         // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
                         // 視線ベクトルの逆単位ベクトル
@@ -164,7 +157,7 @@ int main(int argc, char *argv[]) {
                         // vec3d_dot(入射ベクトル, 法線ベクトル) =
                         // |入射ベクトル||法線ベクトル|cosA
                         //  = 1 * 1 * cosA = cosA
-                        double cosA = vec3d_dot(light_dir, normal);
+                        double cosA = vec3d_dot(pos_to_light, normal);
                         cosA = cosA >= 0 ? cosA : 0.0;
                         t_color radience_dif = color_mult_num(
                             color_mult_color(intersected_shape->kd, ii), cosA);
@@ -175,7 +168,7 @@ int main(int argc, char *argv[]) {
                         if (cosA > 0) {
                             //正反射ベクトル
                             t_vec3d r = vec3d_sub(
-                                vec3d_mult(normal, 2 * (cosA)), light_dir);
+                                vec3d_mult(normal, 2 * (cosA)), pos_to_light);
                             // 視線ベクトルの逆単位ベクトル
                             // t_vec3d v = vec3d_mult(
                             //    o_to_screen, -1.0 * 1.0 /

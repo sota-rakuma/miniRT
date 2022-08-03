@@ -16,8 +16,9 @@ t_shape *compute_intersected_shape(t_world *world, t_vec3d to_screen) {
     double t;
 
     camera_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
-    now_shape = world->shape_list;
+    intersected_shape = NULL;
     minimum_t = -1;
+    now_shape = world->shape_list;
     while (now_shape) {
         t = shape_get_intersection(camera_to_screen, vec3d_camera(world->camera), now_shape);
         if (t >= 1.0 && (intersected_shape == NULL || minimum_t > t))
@@ -86,9 +87,8 @@ int main(int argc, char *argv[])
                 }
                 now_shape = now_shape->next;
             }
-            // intersected_shape = compute_intersected_shape(world, to_screen);
+            intersected_shape = compute_intersected_shape(world, to_screen);
             
-
             // // 鏡か？
             // if (intersected_shape && intersected_shape->is_mirror)
             // {

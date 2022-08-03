@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    t_screen *screen = screen_init("miniRT");
+    t_display *screen = display_init("miniRT");
 
     int height = HEIGHT;
     int width = WIDTH;

@@ -83,7 +83,7 @@ typedef struct s_world {
 } t_world;
 
 
-#include "screen/screen.h"
+#include "display/display.h"
 #include "util/util.h"
 #include "shape/shape.h"
 #include "world/world.h"

@@ -9,9 +9,8 @@ static void	camera_set_base_vec(t_camera *camera)
 	else
 		a = (t_vec3d){1, 0, 0};
 	camera->screen_vertical_normal = vec3d_cross(a, camera->normal);
-	camera->screen_vertical_normal = vec3d_mult(
-			camera->screen_vertical_normal,
-			1.0 / vec3d_length(camera->screen_vertical_normal));
+	camera->screen_vertical_normal = vec3d_unit(
+			camera->screen_vertical_normal);
 	camera->screen_horizon_normal = vec3d_cross(
 			camera->normal,
 			camera->screen_vertical_normal);
@@ -47,9 +46,7 @@ static void	camera_set_start_pos(t_camera *camera)
 
 void	camera_set(t_camera *camera)
 {
-	camera->normal = vec3d_mult(
-			camera->normal,
-			1.0 / vec3d_length(camera->normal));
+	camera->normal = vec3d_unit(camera->normal);
 	camera->fov = M_PI * camera->fov / 180.0;
 	camera_set_base_vec(camera);
 	camera_set_start_pos(camera);

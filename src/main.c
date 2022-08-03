@@ -102,18 +102,18 @@ int main(int argc, char *argv[]) {
             double minimum_t = shape_get_intersection(
                 o_to_screen, vec3d_camera(world->camera), intersected_shape);
 
-            // // 鏡か？
-            // if (intersected_shape && intersected_shape->is_mirror)
-            // {
-            //     // printf("mirror\n");
-            //     t_vec3d pos = vec3d_add(world->camera->pos,
-            //     vec3d_mult(o_to_screen, minimum_t)); t_color color =
-            //     compute_mirror(world, intersected_shape, o_to_screen,
-            //     minimum_t, 0, pos);
-            //     // printf("color{%.4f, %.4f, %.4f}\n", color.r, color.g,
-            //     color.b); img_pixel_put(screen->_img, x, y,
-            //     convert_color(color)); x++; continue;
-            // }
+            // 鏡か？
+            if (intersected_shape && intersected_shape->is_mirror)
+            {
+                // printf("mirror\n");
+                t_vec3d pos = vec3d_add(world->camera->pos,
+                vec3d_mult(o_to_screen, minimum_t)); t_color color =
+                compute_mirror(world, intersected_shape, o_to_screen,
+                minimum_t, 0, pos);
+                // printf("color{%.4f, %.4f, %.4f}\n", color.r, color.g, color.b);
+                img_pixel_put(screen->_img, x, y,
+                convert_color(color)); x++; continue;
+            }
 
             // 光の強度
             t_color intensity = (t_color){0.0, 0.0, 0.0};
@@ -143,8 +143,7 @@ int main(int argc, char *argv[]) {
                         // 入射ベクトル: 点光源 - 交差位置
                         //  -> 単位ベクトル
                         t_vec3d light_dir = vec3d_sub(now_light->pos, int_pos);
-                        light_dir = vec3d_mult(light_dir,
-                                               1.0 / vec3d_length(light_dir));
+                        light_dir = vec3d_unit(light_dir);
 
                         t_vec3d normal;
                         // 法線ベクトル[球]     : 交差位置(球面上の点) - 球中心
@@ -164,13 +163,11 @@ int main(int argc, char *argv[]) {
                         }
                         // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
                         // 視線ベクトルの逆単位ベクトル
-                        t_vec3d v =
-                            vec3d_mult(o_to_screen,
-                                       -1.0 * 1.0 / vec3d_length(o_to_screen));
+                        t_vec3d v = vec3d_unit(vec3d_mult(o_to_screen, -1.0));
                         if (vec3d_dot(v, normal) <= 0.0) {
                             normal = vec3d_mult(normal, -1.0);
                         }
-                        normal = vec3d_mult(normal, 1.0 / vec3d_length(normal));
+                        normal = vec3d_unit(normal);
 
                         t_color ii = color_mult_num(
                             now_light->color, now_light->intensity / 255.0);

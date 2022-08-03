@@ -67,4 +67,4 @@ bonus: all
 norm:
 	norminette src libft | grep Error! || echo ok
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean 

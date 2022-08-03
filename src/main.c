@@ -145,22 +145,10 @@ int main(int argc, char *argv[]) {
                         t_vec3d light_dir = vec3d_sub(now_light->pos, int_pos);
                         light_dir = vec3d_unit(light_dir);
 
-                        t_vec3d normal;
                         // 法線ベクトル[球]     : 交差位置(球面上の点) - 球中心
                         // 法線ベクトル[平面]   : t_shapeの要素
                         //  -> 単位ベクトル
-                        if (intersected_shape->kind == SPHERE)
-                            normal =
-                                vec3d_sub(int_pos, intersected_shape->center);
-                        else if (intersected_shape->kind == PLANE)
-                            normal = intersected_shape->oriental_normal;
-                        else if (intersected_shape->kind == CYLINDER) {
-                            normal = vec3d_cross(
-                                vec3d_sub(int_pos, intersected_shape->center),
-                                intersected_shape->oriental_normal);
-                            normal = vec3d_cross(
-                                intersected_shape->oriental_normal, normal);
-                        }
+                        t_vec3d normal = shape_normal_vec(intersected_shape, int_pos);
                         // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
                         // 視線ベクトルの逆単位ベクトル
                         t_vec3d v = vec3d_unit(vec3d_mult(o_to_screen, -1.0));

@@ -8,4 +8,6 @@ double with_plane(t_vec3d o_to_screen, t_vec3d o, t_shape *shape);
 double with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape);
 double shape_get_intersection(t_vec3d o_to_screen, t_vec3d o, t_shape *shape);
 
+t_vec3d shape_normal_vec(t_shape *shape, t_vec3d pos);
+
 #endif /* SHAPE_H */

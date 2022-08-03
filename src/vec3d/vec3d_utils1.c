@@ -1,32 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec3d.h                                            :+:      :+:    :+:   */
+/*   vec3d_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/03 18:36:19 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/03 18:37:53 by rnishimo         ###   ########.fr       */
+/*   Created: 2022/08/03 18:36:03 by rnishimo          #+#    #+#             */
+/*   Updated: 2022/08/03 18:36:13 by rnishimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VEC3D_H
-# define VEC3D_H
+#include "../minirt.h"
 
-typedef struct s_vec3d {
-	double	x;
-	double	y;
-	double	z;
-}	t_vec3d;
-
-// vec3d_utils.c
-double	vec3d_dot(t_vec3d a, t_vec3d b);
-t_vec3d	vec3d_cross(t_vec3d a, t_vec3d b);
-t_vec3d	vec3d_sub(t_vec3d a, t_vec3d b);
-t_vec3d	vec3d_add(t_vec3d a, t_vec3d b);
-t_vec3d	vec3d_mult(t_vec3d a, double n);
-
-// vec3d_utils1.c
-double	vec3d_length(t_vec3d a);
-
-#endif /* VEC3D_H */
+double	vec3d_length(t_vec3d a)
+{
+	return (sqrt(vec3d_dot(a, a)));
+}

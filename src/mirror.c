@@ -11,7 +11,7 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
     t_vec3d r = vec3d_mult(shape->oriental_normal, 2 * vec3d_dot(shape->oriental_normal, l));
     r = vec3d_sub(r, l);
 
-    double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
+    // double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
 
     t_camera *camera;
     camera = malloc(sizeof(t_camera));
@@ -28,7 +28,7 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
             continue;
         }
         double t = -1.0;
-        t = shape_get_intersection[now_shape->kind](
+        t = shape_get_intersection(
             o_to_screen, camera->pos, now_shape);
         if (t > 0.0 && (nearest_shape == NULL || minimum_t > t))
         {
@@ -79,7 +79,7 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
                 t_vec3d int_to_light_dir = vec3d_sub(now_light->pos, int_pos);
                 while (loop_shape)
                 {
-                    double t = shape_get_intersection[loop_shape->kind](
+                    double t = shape_get_intersection(
                         int_to_light_dir,
                         vec3d_add(int_pos, vec3d_mult(int_to_light_dir, 0.000000001 / vec3d_length(int_to_light_dir))),
                         loop_shape);

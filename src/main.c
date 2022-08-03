@@ -9,7 +9,25 @@ int key_event(int key_code, void *param)
 }
 
 t_shape *compute_intersected_shape(t_world *world, t_vec3d to_screen) {
-    return NULL;
+    t_vec3d camera_to_screen;
+    t_shape *now_shape;
+    t_shape *intersected_shape;
+    double minimum_t;
+    double t;
+
+    camera_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
+    now_shape = world->shape_list;
+    minimum_t = -1;
+    while (now_shape) {
+        t = shape_get_intersection(camera_to_screen, vec3d_camera(world->camera), now_shape);
+        if (t >= 1.0 && (intersected_shape == NULL || minimum_t > t))
+        {
+            intersected_shape = now_shape;
+            minimum_t = t;
+        }
+        now_shape = now_shape->next;
+    }
+    return intersected_shape;
 }
 
 int main(int argc, char *argv[])
@@ -36,7 +54,7 @@ int main(int argc, char *argv[])
     t_vec3d to_screen;
 
     // 交差判定をする関数ポインタの配列
-    double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
+    // double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
 
     // forで回す
     long y;
@@ -59,7 +77,7 @@ int main(int argc, char *argv[])
             while (now_shape)
             {
                 double t = -1.0;
-                t = shape_get_intersection[now_shape->kind](
+                t = shape_get_intersection(
                     o_to_screen, vec3d_camera(world->camera), now_shape);
                 if (t >= 1.0 && (intersected_shape == NULL || minimum_t > t))
                 {
@@ -68,6 +86,8 @@ int main(int argc, char *argv[])
                 }
                 now_shape = now_shape->next;
             }
+            // intersected_shape = compute_intersected_shape(world, to_screen);
+            
 
             // // 鏡か？
             // if (intersected_shape && intersected_shape->is_mirror)
@@ -114,7 +134,7 @@ int main(int argc, char *argv[])
                         t_vec3d int_to_light_dir = vec3d_sub(now_light->pos, int_pos);
                         while (loop_shape)
                         {
-                            double t = shape_get_intersection[loop_shape->kind](
+                            double t = shape_get_intersection(
                                 int_to_light_dir,
                                 vec3d_add(int_pos, vec3d_mult(int_to_light_dir, 0.000000001 / vec3d_length(int_to_light_dir))),
                                 loop_shape);

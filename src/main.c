@@ -113,6 +113,26 @@ t_color compute_light(t_world *world, t_vec3d to_screen, t_shape *shape,
     return intensity;
 }
 
+t_color compute_brightness(t_world *world, t_vec3d to_screen, t_shape *shape) {
+    t_color intensity = (t_color){0.0, 0.0, 0.0};
+    t_color add_intensity;
+
+    if (shape == NULL)
+        return (t_color){0.0, 0.0, 0.0};
+    t_light *now_light = world->light_list;
+    while (now_light) {
+        // 環境光
+        if (now_light->kind == AMBIENT_LIGHT)
+            add_intensity = compute_ambient_light(world, shape, now_light);
+        // 点光源
+        if (now_light->kind == LIGHT)
+            add_intensity = compute_light(world, to_screen, shape, now_light);
+        intensity = color_add_color(intensity, add_intensity);
+        now_light = now_light->next;
+    }
+    return intensity;
+}
+
 int main(int argc, char *argv[]) {
     void *mlx = mlx_init();
     if (mlx == NULL) {
@@ -176,27 +196,8 @@ int main(int argc, char *argv[]) {
             }
 
             // 光の強度
-            t_color intensity = (t_color){0.0, 0.0, 0.0};
-
-            if (intersected_shape) {
-                t_light *now_light = world->light_list;
-                while (now_light) {
-                    // 環境光
-                    if (now_light->kind == AMBIENT_LIGHT)
-                        intensity = color_add_color(
-                            intensity,
-                            compute_ambient_light(world, intersected_shape,
-                                                  now_light));
-                    // 点光源
-                    if (now_light->kind == LIGHT)
-                        intensity = color_add_color(
-                            intensity,
-                            compute_light(world, to_screen, intersected_shape,
-                                          now_light));
-                    now_light = now_light->next;
-                }
-            }
-
+            t_color intensity = compute_brightness(world, to_screen, intersected_shape);
+            
             // [0, 1]に収める
             intensity = color_normalize(intensity);
             t_color screen_color;

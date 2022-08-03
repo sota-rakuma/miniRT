@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+typedef struct s_vec3d	t_vec3d;
+
 // camera
 typedef struct s_camera {
 	t_vec3d	pos;

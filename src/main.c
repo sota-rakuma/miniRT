@@ -13,16 +13,6 @@ t_vec3d get_vec_camera_to_screen(t_world *world, t_vec3d screen_p)
     return (vec3d_sub(screen_p, world->camera->pos));
 }
 
-t_vec3d vec3d_camera(t_camera *camera)
-{
-    return (camera->pos);
-}
-
-t_vec3d vec3d_sp_center(t_shape *shape)
-{
-    return (shape->center);
-}
-
 int main(int argc, char *argv[])
 {
     void *mlx = mlx_init();

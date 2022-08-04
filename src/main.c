@@ -134,6 +134,28 @@ t_color compute_brightness(t_world *world, t_vec3d to_screen, t_shape *shape) {
     return intensity;
 }
 
+t_color compute_color_of_pixel(t_world *world, t_vec3d to_screen) {
+    t_vec3d o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
+    t_shape *intersected_shape = compute_intersected_shape(world, to_screen);
+    double minimum_t = shape_get_intersection(
+        o_to_screen, vec3d_camera(world->camera), intersected_shape);
+    if (intersected_shape == NULL)
+        return world->bg;
+    // 鏡か？
+    if (intersected_shape->is_mirror) {
+        t_vec3d pos =
+            vec3d_add(world->camera->pos, vec3d_mult(o_to_screen, minimum_t));
+        t_color color = compute_mirror(world, intersected_shape, o_to_screen,
+                                       minimum_t, 0, pos);
+        return color;
+    }
+    // 光の強度
+    t_color intensity = compute_brightness(world, to_screen, intersected_shape);
+    intensity = color_normalize(intensity);
+    t_color screen_color = color_mult_num(intensity, 255.0);
+    return screen_color;
+}
+
 int main(int argc, char *argv[]) {
     void *mlx = mlx_init();
     if (mlx == NULL) {
@@ -156,50 +178,17 @@ int main(int argc, char *argv[]) {
             vec3d_mult(camera->screen_vertical_normal, camera->dy * (double)y));
         x = 0;
         while (x < WIDTH) {
-            t_vec3d to_screen = vec3d_add(screen_p_yaxis,
-                                  vec3d_mult(camera->screen_horizon_normal,
-                                             camera->dx * (double)x));
-            // カメラから一番近いshapeを取得する--------------------------
-            // 視線ベクトル
-            t_vec3d o_to_screen =
-                vec3d_camera_to_screen(world->camera, to_screen);
-            t_shape *intersected_shape =
-                compute_intersected_shape(world, to_screen);
-            double minimum_t = shape_get_intersection(
-                o_to_screen, vec3d_camera(world->camera), intersected_shape);
-            if (intersected_shape == NULL)
-            {
-                img_pixel_put(screen->_img, x, y, convert_color(world->bg));
-                x++;
-                continue;
-            }
-
-            // 鏡か？
-            if (intersected_shape->is_mirror) {
-                t_vec3d pos = vec3d_add(world->camera->pos,
-                                        vec3d_mult(o_to_screen, minimum_t));
-                t_color color = compute_mirror(world, intersected_shape,
-                                               o_to_screen, minimum_t, 0, pos);
-                img_pixel_put(screen->_img, x, y, convert_color(color));
-                x++;
-                continue;
-            }
-
-            // 光の強度
-            t_color intensity = compute_brightness(world, to_screen, intersected_shape);
-            
-            // [0, 1]に収める
-            intensity = color_normalize(intensity);
-            t_color screen_color = color_mult_num(intensity, 255.0);
-            img_pixel_put(screen->_img, x, y, convert_color(screen_color));
+            t_vec3d to_screen = vec3d_add(
+                screen_p_yaxis, vec3d_mult(camera->screen_horizon_normal,
+                                           camera->dx * (double)x));
+            t_color color = compute_color_of_pixel(world, to_screen);
+            img_pixel_put(screen->_img, x, y, convert_color(color));
             x++;
         }
         y++;
     }
-
     mlx_put_image_to_window(screen->_mlx, screen->_win, screen->_img->_img, 0,
                             0);
-
     mlx_key_hook(screen->_win, key_event, NULL);
     mlx_loop(screen->_mlx);
     return (0);

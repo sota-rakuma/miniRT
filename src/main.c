@@ -145,24 +145,10 @@ int main(int argc, char *argv[]) {
     // ファイルをパース
     t_world *world = world_init(argv[1]);
     camera_set(world->camera);
-
-    // 視点の位置を決める
     t_camera *camera = world->camera;
 
-    // 背景
-    t_color bg = world->bg;
-
-    // スクリーン上の点
-    t_vec3d to_screen;
-
-    // 交差判定をする関数ポインタの配列
-    // double (*shape_get_intersection[])() = {with_sphere, with_plane,
-    // with_cylinder};
-
-    // forで回す
     long y;
     long x;
-
     y = 0;
     while (y < HEIGHT) {
         t_vec3d screen_p_yaxis = vec3d_add(
@@ -170,7 +156,7 @@ int main(int argc, char *argv[]) {
             vec3d_mult(camera->screen_vertical_normal, camera->dy * (double)y));
         x = 0;
         while (x < WIDTH) {
-            to_screen = vec3d_add(screen_p_yaxis,
+            t_vec3d to_screen = vec3d_add(screen_p_yaxis,
                                   vec3d_mult(camera->screen_horizon_normal,
                                              camera->dx * (double)x));
             // カメラから一番近いshapeを取得する--------------------------
@@ -205,7 +191,7 @@ int main(int argc, char *argv[]) {
             if (intersected_shape) {
                 screen_color = color_mult_num(intensity, 255.0);
             } else {
-                screen_color = bg;
+                screen_color = world->bg;
             }
             img_pixel_put(screen->_img, x, y, convert_color(screen_color));
             x++;

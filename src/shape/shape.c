@@ -30,8 +30,8 @@ double with_sphere(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 double with_plane(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 {
     t_vec3d o_to_point = vec3d_sub(shape->point, o);
-    double a = vec3d_dot(shape->oriental_normal, o_to_screen);
-    double  b = vec3d_dot(shape->oriental_normal, o_to_point);
+    double a = vec3d_dot(shape->normal, o_to_screen);
+    double  b = vec3d_dot(shape->normal, o_to_point);
 	if (a != 0.0)
 		return (b / a);
 	return (-1.0);
@@ -50,7 +50,7 @@ double with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
     //   = 2 ((D x v)dot(O x v) - (D x v)dot(C x v))
     // c = (O x v)^2 - 2 * (O x v)dot(C x v) + (C x v)^2 - radius^2
 
-    t_vec3d v = vec3d_mult(shape->oriental_normal, 1.0 / vec3d_length(shape->oriental_normal));
+    t_vec3d v = vec3d_mult(shape->normal, 1.0 / vec3d_length(shape->normal));
     t_vec3d d_cross_v = vec3d_cross(o_to_screen, v);
     t_vec3d o_cross_v = vec3d_cross(o, v);
     t_vec3d c_cross_v = vec3d_cross(shape->center, v);

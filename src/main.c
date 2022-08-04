@@ -171,11 +171,11 @@ int main(int argc, char *argv[])
                         if (nearest_shape->kind == SPHERE)
                             normal = vec3d_sub(int_pos, nearest_shape->center);
                         else if (nearest_shape->kind == PLANE)
-                            normal = nearest_shape->oriental_normal;
+                            normal = nearest_shape->normal;
                         else if (nearest_shape->kind == CYLINDER)
                         {
-                            normal = vec3d_cross(vec3d_sub(int_pos, nearest_shape->center), nearest_shape->oriental_normal);
-                            normal = vec3d_cross(nearest_shape->oriental_normal, normal);
+                            normal = vec3d_cross(vec3d_sub(int_pos, nearest_shape->center), nearest_shape->normal);
+                            normal = vec3d_cross(nearest_shape->normal, normal);
                         }
                         // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
                         // 視線ベクトルの逆単位ベクトル

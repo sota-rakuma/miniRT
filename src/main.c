@@ -142,13 +142,13 @@ t_color compute_color_of_pixel(t_world *world, t_vec3d to_screen) {
     if (intersected_shape == NULL)
         return world->bg;
     // 鏡か？
-    if (intersected_shape->is_mirror) {
-        t_vec3d pos =
-            vec3d_add(world->camera->pos, vec3d_mult(o_to_screen, minimum_t));
-        t_color color = compute_mirror(world, intersected_shape, o_to_screen,
-                                       minimum_t, 0, pos);
-        return color;
-    }
+    // if (intersected_shape->is_mirror) {
+    //     t_vec3d pos =
+    //         vec3d_add(world->camera->pos, vec3d_mult(o_to_screen, minimum_t));
+    //     t_color color = compute_mirror(world, intersected_shape, o_to_screen,
+    //                                    minimum_t, 0, pos);
+    //     return color;
+    // }
     // 光の強度
     t_color intensity = compute_brightness(world, to_screen, intersected_shape);
     intensity = color_normalize(intensity);

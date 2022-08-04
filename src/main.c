@@ -167,16 +167,19 @@ int main(int argc, char *argv[]) {
                 compute_intersected_shape(world, to_screen);
             double minimum_t = shape_get_intersection(
                 o_to_screen, vec3d_camera(world->camera), intersected_shape);
+            if (intersected_shape == NULL)
+            {
+                img_pixel_put(screen->_img, x, y, convert_color(world->bg));
+                x++;
+                continue;
+            }
 
             // 鏡か？
-            if (intersected_shape && intersected_shape->is_mirror) {
-                // printf("mirror\n");
+            if (intersected_shape->is_mirror) {
                 t_vec3d pos = vec3d_add(world->camera->pos,
                                         vec3d_mult(o_to_screen, minimum_t));
                 t_color color = compute_mirror(world, intersected_shape,
                                                o_to_screen, minimum_t, 0, pos);
-                // printf("color{%.4f, %.4f, %.4f}\n", color.r, color.g,
-                // color.b);
                 img_pixel_put(screen->_img, x, y, convert_color(color));
                 x++;
                 continue;
@@ -187,12 +190,7 @@ int main(int argc, char *argv[]) {
             
             // [0, 1]に収める
             intensity = color_normalize(intensity);
-            t_color screen_color;
-            if (intersected_shape) {
-                screen_color = color_mult_num(intensity, 255.0);
-            } else {
-                screen_color = world->bg;
-            }
+            t_color screen_color = color_mult_num(intensity, 255.0);
             img_pixel_put(screen->_img, x, y, convert_color(screen_color));
             x++;
         }

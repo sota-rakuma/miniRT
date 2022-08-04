@@ -1,7 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   double_min.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/04 10:41:59 by rnishimo          #+#    #+#             */
+/*   Updated: 2022/08/04 10:42:05 by rnishimo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "util.h"
 
-double double_min(double a, double b) {
-	if(a > b)
+double	double_min(double a, double b)
+{
+	if (a > b)
 		return (b);
 	return (a);
 }

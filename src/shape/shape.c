@@ -46,7 +46,7 @@ double with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
     //   = 2 ((D x v)dot(O x v) - (D x v)dot(C x v))
     // c = (O x v)^2 - 2 * (O x v)dot(C x v) + (C x v)^2 - radius^2
 
-    t_vec3d v = vec3d_mult(shape->normal, 1.0 / vec3d_length(shape->normal));
+    t_vec3d v = vec3d_unit(shape->normal);
     t_vec3d d_cross_v = vec3d_cross(o_to_screen, v);
     t_vec3d o_cross_v = vec3d_cross(o, v);
     t_vec3d c_cross_v = vec3d_cross(shape->center, v);
@@ -91,4 +91,15 @@ double with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 	    t = (t1 > 0 && t2 > 0 ? t_min : t_max);
     }
     return t;
+}
+
+double shape_get_intersection(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
+{
+    if (shape->kind == SPHERE)
+        return with_sphere(o_to_screen, o, shape);
+    if (shape->kind == PLANE)
+        return with_plane(o_to_screen, o, shape);
+    if (shape->kind == CYLINDER)
+        return with_cylinder(o_to_screen, o, shape);
+    return (0.0);
 }

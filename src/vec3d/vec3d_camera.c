@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   double_min.c                                       :+:      :+:    :+:   */
+/*   vec3d_camera.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/04 10:41:59 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/04 10:42:05 by rnishimo         ###   ########.fr       */
+/*   Created: 2022/08/03 18:40:42 by rnishimo          #+#    #+#             */
+/*   Updated: 2022/08/03 18:41:39 by rnishimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "util.h"
+#include "../minirt.h"
 
-double	double_min(double a, double b)
+t_vec3d	vec3d_camera(t_camera *camera)
 {
-	if (a > b)
-		return (b);
-	return (a);
+	return (camera->pos);
 }

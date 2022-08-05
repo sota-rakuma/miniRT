@@ -7,11 +7,11 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
 
     // 正反射ベクトルを計算
     t_vec3d l =vec3d_mult(o_to_screen, -1);
-    l = vec3d_mult(l, 1.0 / vec3d_length(l));
+    l = vec3d_unit(l);
     t_vec3d r = vec3d_mult(shape->normal, 2 * vec3d_dot(shape->normal, l));
     r = vec3d_sub(r, l);
 
-    double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
+    // double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
 
     t_camera *camera;
     camera = malloc(sizeof(t_camera));
@@ -28,7 +28,7 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
             continue;
         }
         double t = -1.0;
-        t = shape_get_intersection[now_shape->kind](
+        t = shape_get_intersection(
             o_to_screen, camera->pos, now_shape);
         if (t > 0.0 && (nearest_shape == NULL || minimum_t > t))
         {
@@ -79,9 +79,9 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
                 t_vec3d int_to_light_dir = vec3d_sub(now_light->pos, int_pos);
                 while (loop_shape)
                 {
-                    double t = shape_get_intersection[loop_shape->kind](
+                    double t = shape_get_intersection(
                         int_to_light_dir,
-                        vec3d_add(int_pos, vec3d_mult(int_to_light_dir, 0.000000001 / vec3d_length(int_to_light_dir))),
+                        vec3d_add(int_pos, vec3d_mult(vec3d_unit(int_to_light_dir), 0.000000001)),
                         loop_shape);
                     if (0.0 < t && t < 1.0)
                     {
@@ -117,13 +117,10 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
                 }
                 // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
                 // 視線ベクトルの逆単位ベクトル
-                t_vec3d v = vec3d_mult(
-                    o_to_screen, -1.0 * 1.0 / vec3d_length(o_to_screen));
+                t_vec3d v = vec3d_unit(vec3d_mult(o_to_screen, -1.0));
                 if (vec3d_dot(v, normal) <= 0.0)
-                {
                     normal = vec3d_mult(normal, -1.0);
-                }
-                normal = vec3d_mult(normal, 1.0 / vec3d_length(normal));
+                normal = vec3d_unit(normal);
 
                 t_color ii = color_mult_num(
                     now_light->color, now_light->intensity / 255.0);

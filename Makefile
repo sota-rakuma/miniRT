@@ -1,5 +1,5 @@
 CC:=cc
-CFLAGS:=-O2#-Wall -Wextra -Werror
+# CFLAGS:=-O2#-Wall -Wextra -Werror
 NAME:=miniRT
 
 SRC := $(wildcard src/*.c) $(wildcard src/*/*.c)
@@ -53,14 +53,19 @@ $(OBJ_DIR):
 
 clean:
 	rm -f $(OBJ) $(DEP)
-	make clean -C $(LIBFT_DIR)
+	# make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	rm -f $(NAME)
-	make clean -C $(MLX_DIR)
-	make fclean -C $(LIBFT_DIR)
+	# make clean -C $(MLX_DIR)
+	# make fclean -C $(LIBFT_DIR)
 
 re: fclean all
+
+bonus: all
+
+norm_file:
+	norminette src libft | grep Error! || echo ok
 
 norm:
 	@norminette src/*.c src/*/*.c libft/*.c libft/*/*.c  \

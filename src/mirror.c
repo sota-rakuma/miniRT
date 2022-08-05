@@ -8,7 +8,7 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
     // 正反射ベクトルを計算
     t_vec3d l =vec3d_mult(o_to_screen, -1);
     l = vec3d_unit(l);
-    t_vec3d r = vec3d_mult(shape->oriental_normal, 2 * vec3d_dot(shape->oriental_normal, l));
+    t_vec3d r = vec3d_mult(shape->normal, 2 * vec3d_dot(shape->normal, l));
     r = vec3d_sub(r, l);
 
     // double (*shape_get_intersection[])() = {with_sphere, with_plane, with_cylinder};
@@ -109,11 +109,11 @@ t_color compute_mirror(t_world *world, t_shape *shape, t_vec3d o_to_screen, doub
                 if (nearest_shape->kind == SPHERE)
                     normal = vec3d_sub(int_pos, nearest_shape->center);
                 else if (nearest_shape->kind == PLANE)
-                    normal = nearest_shape->oriental_normal;
+                    normal = nearest_shape->normal;
                 else if (nearest_shape->kind == CYLINDER)
                 {
-                    normal = vec3d_cross(vec3d_sub(int_pos, nearest_shape->center), nearest_shape->oriental_normal);
-                    normal = vec3d_cross(nearest_shape->oriental_normal, normal);
+                    normal = vec3d_cross(vec3d_sub(int_pos, nearest_shape->center), nearest_shape->normal);
+                    normal = vec3d_cross(nearest_shape->normal, normal);
                 }
                 // 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
                 // 視線ベクトルの逆単位ベクトル

@@ -64,13 +64,13 @@ typedef struct s_shape {
 	double			radius;
 
 	// plane
-	t_vec3d			oriental_normal;
+	t_vec3d			normal;
 	t_vec3d			point;
 	bool			is_mirror;
 
 	// cylinder
 	// t_vec3d			center;
-	// t_vec3d			oriental_normal;
+	// t_vec3d			normal;
 	// double			radius;
 	double				height;
 } t_shape;
@@ -83,7 +83,7 @@ typedef struct s_world {
 } t_world;
 
 
-#include "screen/screen.h"
+#include "display/display.h"
 #include "util/util.h"
 #include "shape/shape.h"
 #include "world/world.h"

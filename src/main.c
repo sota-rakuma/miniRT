@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
 		printf("initialized mlx error\n");
 		exit(0);
 	}
-	t_screen *screen = screen_init("miniRT");
+	t_display *screen = display_init("miniRT");
 
 	// ファイルをパース
 	t_world *world = world_init(argv[1]);

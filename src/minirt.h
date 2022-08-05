@@ -82,6 +82,17 @@ typedef struct s_world {
 	t_color		bg;
 } t_world;
 
+typedef struct s_compute {
+	t_shape *shape;
+	t_light *light;
+	t_vec3d o_to_screen;
+	t_vec3d intersected_pos;
+	t_vec3d pos_to_light_dir;
+	t_vec3d intersected_pos_normal;
+	t_vec3d reverse_eye_dir;
+	double cosA;
+	t_color light_color;
+} t_compute;
 
 #include "display/display.h"
 #include "util/util.h"

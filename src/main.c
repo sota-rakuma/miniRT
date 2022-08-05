@@ -81,60 +81,58 @@ bool	compute_is_shadow(t_world *world, t_shape *shape, t_light *light,
 	return (false);
 }
 
-// t_color compute_specular(t_shape *shape, t_light *light) {
+void set_t_compute(t_world *world, t_vec3d to_screen, t_compute *c) {
+	c->o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
+	c->pos_to_light_dir =
+		vec3d_unit(vec3d_sub(c->light->pos, c->intersected_pos));
+	c->intersected_pos_normal = shape_normal_vec(c->shape, c->intersected_pos);
+	// 視線ベクトルの逆単位ベクトル
+	c->reverse_eye_dir = vec3d_unit(vec3d_mult(c->o_to_screen, -1.0));
+	// 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
+	if (vec3d_dot(c->reverse_eye_dir, c->intersected_pos_normal) <= 0.0)
+		c->intersected_pos_normal = vec3d_mult(c->intersected_pos_normal, -1.0);
+	c->cosA = double_max(0.0, vec3d_dot(c->pos_to_light_dir, c->intersected_pos_normal));
+	c->light_color = color_mult_num(c->light->color, c->light->intensity / 255.0);
+}
 
-// }
+t_color compute_specular(t_compute *c) {
+	t_color radience_spe = (t_color){0.0, 0.0, 0.0};
+	if (c->cosA > 0)
+	{
+		//正反射ベクトル
+		t_vec3d r = vec3d_sub(vec3d_mult(c->intersected_pos_normal, 2 * (c->cosA)), c->pos_to_light_dir);
+		radience_spe = color_mult_num(
+			color_mult_color(c->shape->ks, c->light_color),
+			pow(double_max(vec3d_dot(c->reverse_eye_dir, r), 0.0), c->shape->shininess));
+	}
+	return radience_spe;
+}
 
-// t_color compute_diffuse(t_shape *shape, t_light *light) {
+t_color compute_diffuse(t_compute *c) {
+	// vec3d_dot(入射ベクトル, 法線ベクトル) =
+	// |入射ベクトル||法線ベクトル|cosA
+	//  = 1 * 1 * cosA = cosA
+	t_color radience_dif =
+		color_mult_num(color_mult_color(c->shape->kd, c->light_color), c->cosA);
+	return radience_dif;
+}
 
-// }
 
 t_color	compute_light(
 	t_world *world, t_vec3d to_screen, t_shape *shape, t_light *light)
 {
-	t_color intensity = (t_color){0.0, 0.0, 0.0};
+	t_color color = (t_color){0.0, 0.0, 0.0};
+	t_compute c;
 
-	// 交差位置: 球面上の点 P = O + tD
-	t_vec3d intersected_pos =
-		compute_intersected_pos(world->camera, to_screen, shape);
-	t_vec3d o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
-	// 付影処理
-	if (compute_is_shadow(world, shape, light, intersected_pos))
-	{
-		light = light->next;
+	c.shape = shape;
+	c.light = light;
+	c.intersected_pos =compute_intersected_pos(world->camera, to_screen, shape);
+	if (compute_is_shadow(world, shape, light, c.intersected_pos))
 		return (t_color){0.0, 0.0, 0.0};
-	}
-	t_vec3d pos_to_light_dir =
-		vec3d_unit(vec3d_sub(light->pos, intersected_pos));
-	t_vec3d normal = shape_normal_vec(shape, intersected_pos);
-	// 視線ベクトルの逆単位ベクトルと法線ベクトルのなす角が90度以上なら逆に向ける
-	// 視線ベクトルの逆単位ベクトル
-	t_vec3d v = vec3d_unit(vec3d_mult(o_to_screen, -1.0));
-	if (vec3d_dot(v, normal) <= 0.0)
-	{
-		normal = vec3d_mult(normal, -1.0);
-	}
-	t_color ii = color_mult_num(light->color, light->intensity / 255.0);
-	// 拡散反射光 ----------------------------------------
-	// vec3d_dot(入射ベクトル, 法線ベクトル) =
-	// |入射ベクトル||法線ベクトル|cosA
-	//  = 1 * 1 * cosA = cosA
-	double cosA = double_max(0.0, vec3d_dot(pos_to_light_dir, normal));
-	t_color radience_dif =
-		color_mult_num(color_mult_color(shape->kd, ii), cosA);
-	intensity = color_add_color(intensity, radience_dif);
-	// 鏡面反射光 ----------------------------------------
-	t_color radience_spe = (t_color){0.0, 0.0, 0.0};
-	if (cosA > 0)
-	{
-		//正反射ベクトル
-		t_vec3d r = vec3d_sub(vec3d_mult(normal, 2 * (cosA)), pos_to_light_dir);
-		radience_spe = color_mult_num(
-			color_mult_color(shape->ks, ii),
-			pow(double_max(vec3d_dot(v, r), 0.0), shape->shininess));
-	}
-	intensity = color_add_color(intensity, radience_spe);
-	return intensity;
+	set_t_compute(world, to_screen, &c);
+	color = color_add_color(color, compute_diffuse(&c));
+	color = color_add_color(color, compute_specular(&c));
+	return color;
 }
 
 t_color	compute_brightness(t_world *world, t_vec3d to_screen, t_shape *shape)

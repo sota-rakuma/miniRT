@@ -182,6 +182,7 @@ t_vec3d	parse_vec3d(char *str)
 	vec.x = parse_num(strs[0]);
 	vec.y = parse_num(strs[1]);
 	vec.z = parse_num(strs[2]);
+	free_all(strs);
 	return (vec);
 }
 
@@ -208,6 +209,7 @@ t_color	parse_color(char *str)
 		printf("color is out of range\n");
 		exit(1);
 	}
+	free_all(strs);
 	return (color);
 }
 
@@ -386,13 +388,11 @@ void	world_parse_line(t_world *world, char **strs)
 	}
 }
 
-void	world_parse(t_world *world, char *filename, int fd)
+void	world_parse(t_world *world, int fd)
 {
 	char	*line;
 	char	**strs;
-	int		*count;
 
-	count = (int []){0, 0};
 	while (true)
 	{
 		line = get_next_line(fd);

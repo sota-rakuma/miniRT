@@ -1,9 +1,5 @@
 #include "../minirt.h"
 
-static t_vec3d vec3d_camera(t_camera *camera) {
-    return (camera->pos);
-}
-
 double with_sphere(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 {
     t_vec3d center_to_o = vec3d_sub(o,

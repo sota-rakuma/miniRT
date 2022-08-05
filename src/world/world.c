@@ -10,7 +10,6 @@ t_world	*world_init(char *filename)
 {
 	const t_color	bg =(t_color){30.0, 30.0, 30.0};
 	t_world			*world;
-	char			*line;
 	int				fd;
 
 	fd = open(filename, O_RDONLY);
@@ -28,7 +27,7 @@ t_world	*world_init(char *filename)
 		exit(1);
 	}
 	world->bg = bg;
-	world_parse(world, filename, fd);
+	world_parse(world, fd);
 	close(fd);
 	return (world);
 }

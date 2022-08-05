@@ -62,4 +62,11 @@ fclean: clean
 
 re: fclean all
 
+norm:
+	@norminette src/*.c src/*/*.c libft/*.c libft/*/*.c  \
+		| grep Error \
+		| grep -v "TOO_MANY_FUNC" \
+		| grep -v "WRONG_SCOPE_COMMENT" \
+		|| echo ok
+
 .PHONY: all clean fclean re

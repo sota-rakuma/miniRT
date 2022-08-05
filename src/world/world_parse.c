@@ -61,29 +61,28 @@ void	*ft_xalloc(size_t count, size_t size, const char *func_name)
 
 double	parse_num(char *str)
 {
-	double	integer;
-	double	sign;
-	double	digit;
-	long	i;
+	const char	*original = str;
+	double		integer;
+	double		sign;
+	double		digit;
 
-	i = 0;
 	integer = 0;
 	digit = 10;
 	sign = 1.0;
-	if (str[i] == '-' || str[i] == '+')
-		sign = 1.0 - 2.0 * (str[i++] == '-');
-	while (ft_isdigit(str[i]))
-		integer = integer * 10 + (double)(str[i++] - '0');
-	if (str[i] == '.')
-		i++;
-	while (ft_isdigit(str[i]))
+	if (*str == '-' || *str == '+')
+		sign = 1.0 - 2.0 * (*(str++) == '-');
+	while (ft_isdigit(*str))
+		integer = integer * 10 + (double)(*(str++) - '0');
+	if (*str == '.')
+		str++;
+	while (ft_isdigit(*str))
 	{
-		integer += (double)(str[i++] - '0') / digit;
+		integer += (double)(*(str++) - '0') / digit;
 		digit *= 10;
 	}
-	if (str[i] != '\0')
+	if (*str != '\0')
 	{
-		printf("parse_num error: %s\n", str);
+		printf("parse_num error: %s\n", original);
 		exit(1);
 	}
 	return (sign * integer);
@@ -264,10 +263,7 @@ void	world_parse_camera(t_world *world, char **strs)
 	t_camera	*camera;
 
 	if (world->camera)
-	{
-		printf("Two or more C's exist\n");
-		exit(1);
-	}
+		ft_printf_and_exit(1, "Two or more C's exist\n");
 	len = strs_len(strs);
 	if (len != 4)
 		number_of_element_error(strs, __func__, len);
@@ -277,16 +273,10 @@ void	world_parse_camera(t_world *world, char **strs)
 	camera->normal = parse_vec3d(strs[2]);
 	tmp = (double []){camera->normal.x, camera->normal.y, camera->normal.z};
 	if (!check_in_range(tmp, 3, 1.0, -1.0))
-	{
-		printf("camera's normal is out of range\n");
-		exit(1);
-	}
+		ft_printf_and_exit(1, "camera's normal is out of range\n");
 	camera->fov = parse_num(strs[3]);
 	if (camera->fov < 0.0 || 180.0 < camera->fov)
-	{
-		printf("camera's fov is out of range\n");
-		exit(1);
-	}
+		ft_printf_and_exit(1, "camera's fov is out of range\n");
 }
 
 void	world_parse_sphere(t_world *world, char **strs)
@@ -367,9 +357,14 @@ void	world_parse_cylinder(t_world *world, char **strs)
 	world_add_shape(world, shape);
 }
 
-void	world_parse_line(t_world *world, char **strs)
+void	world_parse_line(t_world *world, char *line)
 {
-	if (ft_strcmp(strs[0], "A") == 0)
+	char	**strs;
+
+	strs = ft_split(line, ' ');
+	if (strs == NULL)
+		ft_printf_and_exit(1, "in %s, failed to malloc\n", __func__);
+	else if (ft_strcmp(strs[0], "A") == 0)
 		world_parse_ambient_light(world, strs);
 	else if (ft_strcmp(strs[0], "C") == 0)
 		world_parse_camera(world, strs);
@@ -382,16 +377,13 @@ void	world_parse_line(t_world *world, char **strs)
 	else if (ft_strcmp(strs[0], "cy") == 0)
 		world_parse_cylinder(world, strs);
 	else
-	{
-		printf("not exist keyword: %s\n", strs[0]);
-		exit(1);
-	}
+		ft_printf_and_exit(1, "not exist keyword: %s\n", strs[0]);
+	free_all(strs);
 }
 
 void	world_parse(t_world *world, int fd)
 {
 	char	*line;
-	char	**strs;
 
 	while (true)
 	{
@@ -399,17 +391,7 @@ void	world_parse(t_world *world, int fd)
 		if (line == NULL)
 			break ;
 		else if (line[0] != '\0')
-		{
-			strs = ft_split(line, ' ');
-			if (strs == NULL)
-			{
-				printf("in %s, failed to malloc\n", __func__);
-				free(line);
-				exit(1);
-			}
-			world_parse_line(world, strs);
-			free_all(strs);
-		}
+			world_parse_line(world, line);
 		free(line);
 	}
 	if (!world_check(world))

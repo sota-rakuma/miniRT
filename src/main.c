@@ -163,13 +163,10 @@ t_color compute_color_of_pixel(t_world *world, t_vec3d to_screen)
 {
 	t_vec3d	o_to_screen;
 	t_shape	*intersected_shape;
-	double	minimum_t;
 	t_color	color;
 
 	o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
 	intersected_shape = compute_intersected_shape(world, to_screen);
-	minimum_t = shape_get_intersection(
-			o_to_screen, vec3d_camera(world->camera), intersected_shape);
 	if (intersected_shape == NULL)
 		return (world->bg);
 	color = compute_brightness(world, to_screen, intersected_shape);

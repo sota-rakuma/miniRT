@@ -46,12 +46,12 @@ void	world_check(t_world *world, const char *file)
 		light = light->next;
 	}
 	if (!world->camera)
-		ft_printf_and_exit(1, "FILE %s: camera is not found\nError\n", file);
+		ft_printf_and_exit(1, "Error\nFILE %s: camera is not found\n", file);
 	else if (world->a_cnt != 1)
 		ft_printf_and_exit(
-			1, "FILE %s: wrong number of ambient light\nError\n", file);
+			1, "Error\nFILE %s: wrong number of ambient light\n", file);
 	else if (BONUS_FLAG == 0 && world->l_cnt != 1)
-		ft_printf_and_exit(1, "FILE %s: wrong number of light\nError\n", file);
+		ft_printf_and_exit(1, "Error\nFILE %s: wrong number of light\n", file);
 }
 
 // ワールド情報は現状直接書いてる

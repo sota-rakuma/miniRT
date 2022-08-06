@@ -62,6 +62,8 @@ t_world	*world_init(char *filename)
 	t_world			*world;
 	int				fd;
 
+	if (!check_filename(filename))
+		ft_printf_and_exit(1, "FILE %s: Not .rt extension\nError\n", filename);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{

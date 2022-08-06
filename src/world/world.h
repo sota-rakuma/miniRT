@@ -20,6 +20,7 @@ void	world_add_shape(t_world *world, t_shape *shape);
 
 bool	check_in_range(double val[], size_t len, double max, double min);
 bool	check_num_of_elements(char *str);
+bool	check_filename(char *filename);
 
 double	parse_num(char *str, long row);
 t_vec3d	parse_vec3d(char *str, long row);

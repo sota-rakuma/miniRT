@@ -34,3 +34,18 @@ bool	check_num_of_elements(char *str)
 	}
 	return (cnt == 2);
 }
+
+bool	check_filename(char *filename)
+{
+	size_t	i;
+	size_t	len;
+
+	len = ft_strlen(filename);
+	if (len < 3)
+		return (false);
+	i = len - 1;
+	return (
+		(filename[i--] == 't')
+		&& (filename[i--] == 'r')
+		&& (filename[i] == '.'));
+}

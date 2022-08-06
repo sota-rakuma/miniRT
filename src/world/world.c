@@ -63,17 +63,17 @@ t_world	*world_init(char *filename)
 	int				fd;
 
 	if (!check_filename(filename))
-		ft_printf_and_exit(1, "FILE %s: Not .rt extension\nError\n", filename);
+		ft_printf_and_exit(1, "Error\nFILE %s: Not .rt extension\n", filename);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		perror("cannot open file");
+		perror("Error\ncannot open file");
 		exit(1);
 	}
 	world = ft_calloc(1, sizeof(t_world));
 	if (!world)
 	{
-		printf("in %s, failed to malloc\n", __func__);
+		printf("Error\nin %s, failed to malloc\n", __func__);
 		close(fd);
 		exit(1);
 	}

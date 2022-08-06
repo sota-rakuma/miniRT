@@ -18,7 +18,7 @@ void	*ft_xalloc(size_t count, size_t size, const char *func_name)
 	ptr = malloc(len);
 	if (ptr == NULL)
 	{
-		printf("in %s, failed to malloc\nError\n", func_name);
+		printf("Error\nin %s, failed to malloc\nError\n", func_name);
 		exit(1);
 	}
 	return (ptr);

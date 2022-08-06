@@ -7,7 +7,7 @@ void	world_parse_sphere(t_world *world, char **strs, long row)
 
 	if (len != 4)
 		ft_printf_and_exit(
-			1, "line %ld: number of elements: %ld \nError\n", row, len);
+			1, "Error\nline %ld: number of elements: %ld \n", row, len);
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = SPHERE;
 	shape->center = parse_vec3d(strs[1], row);
@@ -28,14 +28,14 @@ void	world_parse_plane(t_world *world, char **strs, long row)
 
 	if (len != 4 && (len != 5 || ft_strcmp(strs[4], "mirror")))
 		ft_printf_and_exit(
-			1, "line %ld: the number of elements: %ld \nError\n", row, len);
+			1, "Error\nline %ld: the number of elements: %ld \n", row, len);
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = PLANE;
 	shape->point = parse_vec3d(strs[1], row);
 	shape->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){shape->normal.x, shape->normal.y, shape->normal.z};
 	if (!check_in_range(tmp, 3, 1.0, -1.0))
-		ft_printf_and_exit(1, "line %ld: normal is out of range\nError\n", row);
+		ft_printf_and_exit(1, "Error\nline %ld: normal is out of range\n", row);
 	shape->color = parse_color(strs[3], row);
 	shape->ka = color_mult_num(shape->color, 1.0 / 255.0);
 	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);
@@ -54,13 +54,13 @@ void	world_parse_cylinder(t_world *world, char **strs, long row)
 
 	if (len != 6)
 		ft_printf_and_exit(
-			1, "line %ld: the number of elements: %ld\nError\n", row, len);
+			1, "Error\nline %ld: the number of elements: %ld\n", row, len);
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = CYLINDER;
 	shape->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){shape->normal.x, shape->normal.y, shape->normal.z};
 	if (!check_in_range(tmp, 3, 1.0, -1.0))
-		ft_printf_and_exit(1, "line %ld: normal is out of range\nError\n", row);
+		ft_printf_and_exit(1, "Error\nline %ld: normal is out of range\n", row);
 	shape->normal = vec3d_unit(shape->normal);
 	shape->radius = parse_num(strs[3], row) / 2.0;
 	shape->height = parse_num(strs[4], row);

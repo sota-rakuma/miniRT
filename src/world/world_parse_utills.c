@@ -27,7 +27,7 @@ bool	check_num_of_elements(char *str)
 		if (commma == NULL)
 			break ;
 		else if (!ft_isdigit(commma[1])
-				&& commma[1] != '-' && commma[1] != '+')
+			&& commma[1] != '-' && commma[1] != '+')
 			return (false);
 		commma++;
 		cnt++;

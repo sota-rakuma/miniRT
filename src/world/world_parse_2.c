@@ -2,10 +2,9 @@
 
 void	world_parse_sphere(t_world *world, char **strs, long row)
 {
-	long	len;
-	t_shape	*shape;
+	const long	len = strs_len(strs);
+	t_shape		*shape;
 
-	len = strs_len(strs);
 	if (len != 4)
 		ft_printf_and_exit(
 			1, "line %ld: number of elements: %ld \nError\n", row, len);
@@ -23,11 +22,10 @@ void	world_parse_sphere(t_world *world, char **strs, long row)
 
 void	world_parse_plane(t_world *world, char **strs, long row)
 {
-	long	len;
-	double	*tmp;
-	t_shape	*shape;
+	const long	len = strs_len(strs);
+	double		*tmp;
+	t_shape		*shape;
 
-	len = strs_len(strs);
 	if (len != 4 && (len != 5 || ft_strcmp(strs[4], "mirror")))
 		ft_printf_and_exit(
 			1, "line %ld: the number of elements: %ld \nError\n", row, len);
@@ -50,14 +48,13 @@ void	world_parse_plane(t_world *world, char **strs, long row)
 
 void	world_parse_cylinder(t_world *world, char **strs, long row)
 {
-	long	len;
-	double	*tmp;
-	t_shape	*shape;
+	const long	len = strs_len(strs);
+	double		*tmp;
+	t_shape		*shape;
 
-	len = strs_len(strs);
 	if (len != 6)
 		ft_printf_and_exit(
-			1, "line %ld: the number of elements: %ld \nError\n", row, len);
+			1, "line %ld: the number of elements: %ld\nError\n", row, len);
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = CYLINDER;
 	shape->normal = parse_vec3d(strs[2], row);

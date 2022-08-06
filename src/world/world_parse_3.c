@@ -2,10 +2,9 @@
 
 void	world_parse_ambient_light(t_world *world, char **strs, long row)
 {
-	long	len;
-	t_light	*light;
+	const long	len = strs_len(strs);
+	t_light		*light;
 
-	len = strs_len(strs);
 	if (len != 3)
 		ft_printf_and_exit(
 			1, "line %ld: the number of elements: %ld \nError\n", row, len);
@@ -21,10 +20,9 @@ void	world_parse_ambient_light(t_world *world, char **strs, long row)
 
 void	world_parse_light(t_world *world, char **strs, long row)
 {
-	long	len;
-	t_light	*light;
+	const long	len = strs_len(strs);
+	t_light		*light;
 
-	len = strs_len(strs);
 	if (len != 3 && len != 4)
 		ft_printf_and_exit(
 			1, "line %ld: the number of elements: %ld \nError\n", row, len);
@@ -44,13 +42,12 @@ void	world_parse_light(t_world *world, char **strs, long row)
 
 void	world_parse_camera(t_world *world, char **strs, long row)
 {
-	long		len;
-	double		*tmp;
-	t_camera	*camera;
+	const long		len = strs_len(strs);
+	double			*tmp;
+	t_camera		*camera;
 
 	if (world->camera)
 		ft_printf_and_exit(1, "line %ld: Two or more C's exist\nError\n", row);
-	len = strs_len(strs);
 	if (len != 4)
 		ft_printf_and_exit(
 			1, "line %ld: the number of elements: %ld \nError\n", row, len);

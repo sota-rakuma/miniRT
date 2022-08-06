@@ -1,9 +1,9 @@
 #ifndef WORLD_H
-#define WORLD_H
+# define WORLD_H
 
-#include "../light/light.h"
-#include "../shape/shape.h"
-#include "../camera/camera.h"
+# include "../light/light.h"
+# include "../shape/shape.h"
+# include "../camera/camera.h"
 
 typedef struct s_world {
 	t_light		*light_list;
@@ -36,6 +36,6 @@ void	world_destuctor(t_world *world);
 void	world_parse(t_world *world, int fd);
 void	world_check(t_world *world, const char *file);
 
-t_world	*world_init();
+t_world	*world_init(char *filename);
 
 #endif

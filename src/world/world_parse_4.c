@@ -41,10 +41,6 @@ t_vec3d	parse_vec3d(char *str, long row)
 		exit(1);
 	}
 	strs = ft_split(str, ',');
-	//len = strs_len(strs);
-	//if (len != 3)
-	//	ft_printf_and_exit(
-	//		1, "line %ld: vector is wrong number of elements\nError\n", row);
 	vec.x = parse_num(strs[0], row);
 	vec.y = parse_num(strs[1], row);
 	vec.z = parse_num(strs[2], row);
@@ -62,10 +58,6 @@ t_color	parse_color(char *str, long row)
 		ft_printf_and_exit(
 			1, "line %ld: color has wrong number of elements\nError\n", row);
 	strs = ft_split(str, ',');
-	//len = strs_len(strs);
-	//if (len != 3)
-	//	ft_printf_and_exit(
-	//		1, "line %ld: color wrong number of elements\nError\n", row);
 	color.r = parse_num(strs[0], row);
 	color.g = parse_num(strs[1], row);
 	color.b = parse_num(strs[2], row);

@@ -1,8 +1,8 @@
 #include "../minirt.h"
 
-void *win_init(void *mlx, char *title)
+void	*win_init(void *mlx, char *title)
 {
-	void *win;
+	void	*win;
 
 	win = mlx_new_window(mlx, WIDTH, HEIGHT, title);
 	if (win == NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 10:58:51 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/04 10:59:31 by rnishimo         ###   ########.fr       */
+/*   Updated: 2022/08/06 23:56:41 by srakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,4 @@ t_color	color_mult_color(t_color a, t_color b)
 t_color	color_mult_num(t_color a, double num)
 {
 	return ((t_color){a.r * num, a.g * num, a.b * num});
-}
-
-t_color	color_normalize(t_color a)
-{
-	return ((t_color){
-		double_max(0.0, double_min(1.0, a.r)),
-		double_max(0.0, double_min(1.0, a.g)),
-		double_max(0.0, double_min(1.0, a.b))});
 }

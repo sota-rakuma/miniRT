@@ -2,7 +2,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-void ft_printf_and_exit(int status, char *format, ...)
+void	ft_printf_and_exit(int status, char *format, ...)
 {
 	va_list	ap;
 

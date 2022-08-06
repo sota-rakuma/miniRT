@@ -9,6 +9,29 @@
 # define BONUS_FLAG 0
 #endif
 
+void	world_destuctor(t_world *world)
+{
+	t_light	*light;
+	t_shape	*shape;
+
+	light = world->light_list;
+	while (light)
+	{
+		world->light_list = light->next;
+		free(light);
+		light = world->light_list;
+	}
+	shape = world->shape_list;
+	while (shape)
+	{
+		world->shape_list = shape->next;
+		free(shape);
+		shape = world->shape_list;
+	}
+	free(world->camera);
+	free(world);
+}
+
 void	world_check(t_world *world, const char *file)
 {
 	t_light	*light;
@@ -27,7 +50,7 @@ void	world_check(t_world *world, const char *file)
 	else if (world->a_cnt != 1)
 		ft_printf_and_exit(
 			1, "FILE %s: wrong number of ambient light\nError\n", file);
-	else if (BONUS_FLAG && world->l_cnt != 1)
+	else if (BONUS_FLAG == 0 && world->l_cnt != 1)
 		ft_printf_and_exit(1, "FILE %s: wrong number of light\nError\n", file);
 }
 

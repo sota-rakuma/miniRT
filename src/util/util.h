@@ -3,18 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   util.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 10:42:13 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/05 23:36:27 by rnishimo         ###   ########.fr       */
+/*   Updated: 2022/08/06 21:23:42 by srakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTIL_H
 # define UTIL_H
 
+# include <stdlib.h>
+# include <stdio.h>
+# include <limits.h>
+# include "../libft/libft.h"
+
 double	double_max(double a, double b);
 double	double_min(double a, double b);
 void	ft_printf_and_exit(int status, char *format, ...);
+long	strs_len(char **strs);
+void	*ft_xalloc(size_t count, size_t size, const char *func_name);
+void	free_all(char **strs);
 
 #endif

@@ -1,6 +1,7 @@
 #include "../minirt.h"
 
-typedef struct s_abc {
+typedef struct s_abc
+{
     double a;
     double b;
     double c;

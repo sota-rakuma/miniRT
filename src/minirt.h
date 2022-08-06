@@ -32,10 +32,10 @@ typedef struct s_light {
 	t_light_kind	kind;
 
 	// common
-	double  intensity;
+	double			intensity;
 
 	// ambient_light
-	t_color	color;
+	t_color			color;
 
 	// light
 	t_vec3d			pos;
@@ -77,6 +77,8 @@ typedef struct s_shape {
 
 typedef struct s_world {
 	t_light		*light_list;
+	long		a_cnt;
+	long		l_cnt;
 	t_shape		*shape_list;
 	t_camera	*camera;
 	t_color		bg;

@@ -1,30 +1,5 @@
 #include "../minirt.h"
 
-bool	world_check(t_world *world)
-{
-	t_light	*light;
-	bool	a;
-	bool	l;
-
-	light = world->light_list;
-	a = false;
-	l = false;
-	while (light)
-	{
-		if (light->kind == AMBIENT_LIGHT)
-		{
-			if (a == false)
-				a = true;
-			else
-				return (false);
-		}
-		else
-			l = true;
-		light = light->next;
-	}
-	return (a && l && (world->camera));
-}
-
 long	strs_len(char **strs)
 {
 	long	i;
@@ -53,13 +28,13 @@ void	*ft_xalloc(size_t count, size_t size, const char *func_name)
 	ptr = malloc(len);
 	if (ptr == NULL)
 	{
-		printf("in %s, failed to malloc", func_name);
+		printf("in %s, failed to malloc\nError\n", func_name);
 		exit(1);
 	}
 	return (ptr);
 }
 
-double	parse_num(char *str)
+double	parse_num(char *str, long row)
 {
 	const char	*original = str;
 	double		integer;
@@ -82,7 +57,7 @@ double	parse_num(char *str)
 	}
 	if (*str != '\0')
 	{
-		printf("parse_num error: %s\n", original);
+		printf("line %ld: parse_num error: %s\nError\n", row, original);
 		exit(1);
 	}
 	return (sign * integer);
@@ -98,12 +73,9 @@ void	free_all(char **strs)
 	free(strs);
 }
 
-void	number_of_element_error(
-	char **strs,
-	const char *func_name,
-	long len)
+void	number_of_element_error(char **strs, long len, long row)
 {
-	printf("in %s, the number of elements: %ld Error\n", func_name, len);
+	printf("line %ld: the number of elements: %ld \nError\n", row, len);
 	free_all(strs);
 	exit(1);
 }
@@ -163,7 +135,7 @@ bool	check_num_of_elements(char *str)
 	return (cnt == 2);
 }
 
-t_vec3d	parse_vec3d(char *str)
+t_vec3d	parse_vec3d(char *str, long row)
 {
 	char	**strs;
 	long	len;
@@ -171,21 +143,21 @@ t_vec3d	parse_vec3d(char *str)
 
 	if (!check_num_of_elements(str))
 	{
-		printf("Wrong number of elements\n");
+		printf("line %ld: Wrong number of elements\nError\n", row);
 		exit(1);
 	}
 	strs = ft_split(str, ',');
 	len = strs_len(strs);
 	if (len != 3)
-		number_of_element_error(strs, __func__, len);
-	vec.x = parse_num(strs[0]);
-	vec.y = parse_num(strs[1]);
-	vec.z = parse_num(strs[2]);
+		number_of_element_error(strs, len, row);
+	vec.x = parse_num(strs[0], row);
+	vec.y = parse_num(strs[1], row);
+	vec.z = parse_num(strs[2], row);
 	free_all(strs);
 	return (vec);
 }
 
-t_color	parse_color(char *str)
+t_color	parse_color(char *str, long row)
 {
 	char	**strs;
 	long	len;
@@ -193,105 +165,99 @@ t_color	parse_color(char *str)
 
 	if (!check_num_of_elements(str))
 	{
-		printf("Wrong number of elements\n");
+		printf("line %ld: Wrong number of elements\nError\n", row);
 		exit(1);
 	}
 	strs = ft_split(str, ',');
 	len = strs_len(strs);
 	if (len != 3)
-		number_of_element_error(strs, __func__, len);
-	color.r = parse_num(strs[0]);
-	color.g = parse_num(strs[1]);
-	color.b = parse_num(strs[2]);
+		number_of_element_error(strs, len, row);
+	color.r = parse_num(strs[0], row);
+	color.g = parse_num(strs[1], row);
+	color.b = parse_num(strs[2], row);
 	if (!check_in_range((double []){color.r, color.g, color.b}, 3, 255.0, 0.0))
 	{
-		printf("color is out of range\n");
+		printf("line %ld: color is out of range\nError\n", row);
 		exit(1);
 	}
 	free_all(strs);
 	return (color);
 }
 
-void	world_parse_ambient_light(t_world *world, char **strs)
+void	world_parse_ambient_light(t_world *world, char **strs, long row)
 {
 	long	len;
 	t_light	*light;
 
 	len = strs_len(strs);
 	if (len != 3)
-		number_of_element_error(strs, __func__, len);
+		number_of_element_error(strs, len, row);
 	light = (t_light *)ft_xalloc(sizeof(t_light), 1, __func__);
 	light->kind = AMBIENT_LIGHT;
-	light->intensity = parse_num(strs[1]);
+	light->intensity = parse_num(strs[1], row);
 	if (light->intensity < 0.0 || 1.0 < light->intensity)
-	{
-		printf("brightness of ambient light is out of range\n");
-		exit(1);
-	}
-	light->color = parse_color(strs[2]);
+		ft_printf_and_exit(1, "line %ld: brightness is out of range\nError\n");
+	light->color = parse_color(strs[2], row);
 	world_add_light(world, light);
 }
 
-void	world_parse_light(t_world *world, char **strs)
+void	world_parse_light(t_world *world, char **strs, long row)
 {
 	long	len;
 	t_light	*light;
 
 	len = strs_len(strs);
 	if (len != 3 && len != 4)
-		number_of_element_error(strs, __func__, len);
+		number_of_element_error(strs, len, row);
 	light = (t_light *)ft_xalloc(sizeof(t_light), 1, __func__);
 	light->kind = LIGHT;
-	light->pos = parse_vec3d(strs[1]);
-	light->intensity = parse_num(strs[2]);
+	light->pos = parse_vec3d(strs[1], row);
+	light->intensity = parse_num(strs[2], row);
 	if (light->intensity < 0.0 || 1.0 < light->intensity)
-	{
-		printf("brightness of light is out of range\n");
-		exit(1);
-	}
+		ft_printf_and_exit(1, "line %ld: brightness is out of range\nError\n");
 	if (len == 3)
 		light->color = (t_color){255.0, 255.0, 255.0};
 	else
-		light->color = parse_color(strs[3]);
+		light->color = parse_color(strs[3], row);
 	world_add_light(world, light);
 }
 
-void	world_parse_camera(t_world *world, char **strs)
+void	world_parse_camera(t_world *world, char **strs, long row)
 {
 	long		len;
 	double		*tmp;
 	t_camera	*camera;
 
 	if (world->camera)
-		ft_printf_and_exit(1, "Two or more C's exist\n");
+		ft_printf_and_exit(1, "line %ld: Two or more C's exist\nError\n", row);
 	len = strs_len(strs);
 	if (len != 4)
-		number_of_element_error(strs, __func__, len);
+		number_of_element_error(strs, len, row);
 	camera = (t_camera *)ft_xalloc(sizeof(t_camera), 1, __func__);
 	world->camera = camera;
-	camera->pos = parse_vec3d(strs[1]);
-	camera->normal = parse_vec3d(strs[2]);
+	camera->pos = parse_vec3d(strs[1], row);
+	camera->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){camera->normal.x, camera->normal.y, camera->normal.z};
 	if (!check_in_range(tmp, 3, 1.0, -1.0))
-		ft_printf_and_exit(1, "camera's normal is out of range\n");
-	camera->fov = parse_num(strs[3]);
+		ft_printf_and_exit(1, "line %ld: out of normal's range\nError\n", row);
+	camera->fov = parse_num(strs[3], row);
 	if (camera->fov < 0.0 || 180.0 < camera->fov)
-		ft_printf_and_exit(1, "camera's fov is out of range\n");
+		ft_printf_and_exit(1, "line %ld: out of fov's range\nError\n", row);
 }
 
-void	world_parse_sphere(t_world *world, char **strs)
+void	world_parse_sphere(t_world *world, char **strs, long row)
 {
 	long	len;
 	t_shape	*shape;
 
 	len = strs_len(strs);
 	if (len != 4)
-		number_of_element_error(strs, __func__, len);
+		number_of_element_error(strs, len, row);
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = SPHERE;
-	shape->center = parse_vec3d(strs[1]);
-	shape->radius = parse_num(strs[2]) / 2.0;
-	shape->color = parse_color(strs[3]);
+	shape->center = parse_vec3d(strs[1], row);
+	shape->radius = parse_num(strs[2], row) / 2.0;
+	shape->color = parse_color(strs[3], row);
 	shape->ka = color_mult_num(shape->color, 1.0 / 255.0);
 	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);
 	shape->ks = (t_color){0.3, 0.3, 0.3};
@@ -299,7 +265,7 @@ void	world_parse_sphere(t_world *world, char **strs)
 	world_add_shape(world, shape);
 }
 
-void	world_parse_plane(t_world *world, char **strs)
+void	world_parse_plane(t_world *world, char **strs, long row)
 {
 	long	len;
 	double	*tmp;
@@ -307,18 +273,15 @@ void	world_parse_plane(t_world *world, char **strs)
 
 	len = strs_len(strs);
 	if (len != 4 && (len != 5 || ft_strcmp(strs[4], "mirror")))
-		number_of_element_error(strs, __func__, len);
+		number_of_element_error(strs, len, row);
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = PLANE;
-	shape->point = parse_vec3d(strs[1]);
-	shape->normal = parse_vec3d(strs[2]);
+	shape->point = parse_vec3d(strs[1], row);
+	shape->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){shape->normal.x, shape->normal.y, shape->normal.z};
 	if (!check_in_range(tmp, 3, 1.0, -1.0))
-	{
-		printf("sphere's normal is out of range\n");
-		exit(1);
-	}
-	shape->color = parse_color(strs[3]);
+		ft_printf_and_exit(1, "line %ld: out of normal's range\nError\n", row);
+	shape->color = parse_color(strs[3], row);
 	shape->ka = color_mult_num(shape->color, 1.0 / 255.0);
 	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);
 	shape->ks = (t_color){0.3, 0.3, 0.3};
@@ -328,7 +291,7 @@ void	world_parse_plane(t_world *world, char **strs)
 	world_add_shape(world, shape);
 }
 
-void	world_parse_cylinder(t_world *world, char **strs)
+void	world_parse_cylinder(t_world *world, char **strs, long row)
 {
 	long	len;
 	double	*tmp;
@@ -336,20 +299,20 @@ void	world_parse_cylinder(t_world *world, char **strs)
 
 	len = strs_len(strs);
 	if (len != 6)
-		number_of_element_error(strs, __func__, len);
+		number_of_element_error(strs, len, row);
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = CYLINDER;
-	shape->center = parse_vec3d(strs[1]);
-	shape->normal = parse_vec3d(strs[2]);
+	shape->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){shape->normal.x, shape->normal.y, shape->normal.z};
 	if (!check_in_range(tmp, 3, 1.0, -1.0))
-	{
-		printf("cylinder's normal is out of range\n");
-		exit(1);
-	}
-	shape->radius = parse_num(strs[3]) / 2.0;
-	shape->height = parse_num(strs[4]);
-	shape->color = parse_color(strs[5]);
+		ft_printf_and_exit(1, "line %ld: out of normal's range\nError\n", row);
+	shape->normal = vec3d_unit(shape->normal);
+	shape->radius = parse_num(strs[3], row) / 2.0;
+	shape->height = parse_num(strs[4], row);
+	shape->color = parse_color(strs[5], row);
+	shape->center = parse_vec3d(strs[1], row);
+	shape->center = vec3d_add(
+			shape->center, vec3d_mult(shape->normal, shape->height / 2.0));
 	shape->ka = color_mult_num(shape->color, 1.0 / 255.0);
 	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);
 	shape->ks = (t_color){0.3, 0.3, 0.3};
@@ -357,46 +320,45 @@ void	world_parse_cylinder(t_world *world, char **strs)
 	world_add_shape(world, shape);
 }
 
-void	world_parse_line(t_world *world, char *line)
+void	world_parse_line(t_world *world, char *line, long row)
 {
 	char	**strs;
 
 	strs = ft_split(line, ' ');
 	if (strs == NULL)
-		ft_printf_and_exit(1, "in %s, failed to malloc\n", __func__);
+		ft_printf_and_exit(1, "in %s, failed to malloc\nError\n", __func__);
 	else if (ft_strcmp(strs[0], "A") == 0)
-		world_parse_ambient_light(world, strs);
+		world_parse_ambient_light(world, strs, row);
 	else if (ft_strcmp(strs[0], "C") == 0)
-		world_parse_camera(world, strs);
+		world_parse_camera(world, strs, row);
 	else if (ft_strcmp(strs[0], "L") == 0)
-		world_parse_light(world, strs);
+		world_parse_light(world, strs, row);
 	else if (ft_strcmp(strs[0], "sp") == 0)
-		world_parse_sphere(world, strs);
+		world_parse_sphere(world, strs, row);
 	else if (ft_strcmp(strs[0], "pl") == 0)
-		world_parse_plane(world, strs);
+		world_parse_plane(world, strs, row);
 	else if (ft_strcmp(strs[0], "cy") == 0)
-		world_parse_cylinder(world, strs);
+		world_parse_cylinder(world, strs, row);
 	else
-		ft_printf_and_exit(1, "not exist keyword: %s\n", strs[0]);
+		ft_printf_and_exit(
+			1, "line %ld: not exist keyword: %s\nError\n", row, *strs);
 	free_all(strs);
 }
 
 void	world_parse(t_world *world, int fd)
 {
 	char	*line;
+	long	row;
 
+	row = 1;
 	while (true)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
 			break ;
 		else if (line[0] != '\0')
-			world_parse_line(world, line);
+			world_parse_line(world, line, row);
 		free(line);
-	}
-	if (!world_check(world))
-	{
-		printf("parse error\n");
-		exit(1);
+		row++;
 	}
 }

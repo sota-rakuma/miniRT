@@ -175,6 +175,11 @@ t_color compute_color_of_pixel(t_world *world, t_vec3d to_screen)
 
 int main(int argc, char *argv[])
 {
+	// ファイルをパース
+	t_world *world = world_init(argv[1]);
+	camera_set(world->camera);
+	t_camera *camera = world->camera;
+
 	void *mlx = mlx_init();
 	if (mlx == NULL)
 	{
@@ -182,11 +187,6 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 	t_display *screen = display_init("miniRT");
-
-	// ファイルをパース
-	t_world *world = world_init(argv[1]);
-	camera_set(world->camera);
-	t_camera *camera = world->camera;
 
 	long y;
 	long x;

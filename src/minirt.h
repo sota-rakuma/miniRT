@@ -38,4 +38,13 @@ typedef struct s_compute {
 	t_color	light_color;
 }	t_compute;
 
+typedef struct s_all_info
+{
+	t_world		*world;
+	t_display	*display;
+}	t_all_info;
+
+int	key_event(int key_code, void *param);
+int	click_cross_event(void *param);
+
 #endif /* MINIRT_H */

@@ -13,6 +13,7 @@ t_color	compute_specular(t_compute *c)
 	t_color	radience_spe;
 	t_vec3d	r;
 
+	radience_spe = (t_color){0, 0, 0};
 	if (c->cosA > 0)
 	{
 		r = vec3d_sub(

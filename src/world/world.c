@@ -50,12 +50,11 @@ void	world_check(t_world *world, const char *file)
 	else if (world->a_cnt != 1)
 		ft_printf_and_exit(
 			1, "Error\nFILE %s: wrong number of ambient light\n", file);
-	else if (BONUS_FLAG == 0 && world->l_cnt != 1)
+	else if ((BONUS_FLAG == 0 && world->l_cnt != 1)
+		|| (BONUS_FLAG == 1 && world->l_cnt < 1))
 		ft_printf_and_exit(1, "Error\nFILE %s: wrong number of light\n", file);
 }
 
-// ワールド情報は現状直接書いてる
-// TODO: パースした情報を入れる
 t_world	*world_init(char *filename)
 {
 	const t_color	bg = (t_color){30.0, 30.0, 30.0};

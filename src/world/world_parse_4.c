@@ -22,10 +22,7 @@ double	parse_num(char *str, long row)
 		digit *= 10;
 	}
 	if (*str != '\0')
-	{
-		printf("Error\nline %ld: parse_num error: %s\n", row, original);
-		exit(1);
-	}
+		error_line_msg(row, "parse_num error");
 	return (sign * integer);
 }
 
@@ -36,10 +33,7 @@ t_vec3d	parse_vec3d(char *str, long row)
 	t_vec3d	vec;
 
 	if (!check_num_of_elements(str))
-	{
-		printf("Error\nline %ld: vector has wrong number of elements\n", row);
-		exit(1);
-	}
+		error_line_msg(row, "vector has wrong number of elements");
 	strs = ft_split(str, ',');
 	vec.x = parse_num(strs[0], row);
 	vec.y = parse_num(strs[1], row);
@@ -55,17 +49,13 @@ t_color	parse_color(char *str, long row)
 	t_color	color;
 
 	if (!check_num_of_elements(str))
-		ft_printf_and_exit(
-			1, "Error\nline %ld: color has wrong number of elements\n", row);
+		error_line_msg(row, "color has wrong number of elements");
 	strs = ft_split(str, ',');
 	color.r = parse_num(strs[0], row);
 	color.g = parse_num(strs[1], row);
 	color.b = parse_num(strs[2], row);
 	if (!check_in_range((double []){color.r, color.g, color.b}, 3, 255.0, 0.0))
-	{
-		printf("Error\nline %ld: color is out of range\n", row);
-		exit(1);
-	}
+		error_line_msg(row, "color is out of range");
 	free_all(strs);
 	return (color);
 }

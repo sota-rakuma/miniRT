@@ -8,15 +8,16 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdbool.h>
+# include <string.h>
 # include <mlx.h>
 # include "../libft/libft.h"
 
 # include "vec3d/vec3d.h"
 # include "color/color.h"
-
 # include "world/world.h"
 # include "compute/compute.h"
 # include "display/display.h"
+# include "util/util.h"
 
 enum e_x11_events {
 	X11_ON_DESTROY = 17,

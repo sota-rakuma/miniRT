@@ -6,7 +6,7 @@
 /*   By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 10:44:17 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/06 23:59:47 by srakuma          ###   ########.fr       */
+/*   Updated: 2022/08/09 00:00:33 by srakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "../color/color.h"
 # include "../vec3d/vec3d.h"
-# include "../util/util.h"
 # include <stdbool.h>
 
 // shape

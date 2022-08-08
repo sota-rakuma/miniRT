@@ -32,7 +32,7 @@ void	world_destuctor(t_world *world)
 	free(world);
 }
 
-void	world_check(t_world *world, const char *file)
+void	world_check(t_world *world)
 {
 	t_light	*light;
 
@@ -46,13 +46,12 @@ void	world_check(t_world *world, const char *file)
 		light = light->next;
 	}
 	if (!world->camera)
-		ft_printf_and_exit(1, "Error\nFILE %s: camera is not found\n", file);
+		error("Error\ncamera is not found");
 	else if (world->a_cnt != 1)
-		ft_printf_and_exit(
-			1, "Error\nFILE %s: wrong number of ambient light\n", file);
+		error("Error\nwrong number of ambient light");
 	else if ((BONUS_FLAG == 0 && world->l_cnt != 1)
 		|| (BONUS_FLAG == 1 && world->l_cnt < 1))
-		ft_printf_and_exit(1, "Error\nFILE %s: wrong number of light\n", file);
+		error("Error\nwrong number of light");
 }
 
 t_world	*world_init(char *filename)
@@ -62,11 +61,11 @@ t_world	*world_init(char *filename)
 	int				fd;
 
 	if (!check_filename(filename))
-		ft_printf_and_exit(1, "Error\nFILE %s: Not .rt extension\n", filename);
+		error("Error\nNot .rt extension");
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		perror("Error\ncannot open file");
+		perror("Error\nopen");
 		exit(1);
 	}
 	world = ft_calloc(1, sizeof(t_world));
@@ -78,7 +77,7 @@ t_world	*world_init(char *filename)
 	}
 	world->bg = bg;
 	world_parse(world, fd);
-	world_check(world, filename);
+	world_check(world);
 	close(fd);
 	return (world);
 }

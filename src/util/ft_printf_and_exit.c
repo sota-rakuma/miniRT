@@ -1,13 +1,14 @@
 #include "../minirt.h"
-#include <stdarg.h>
 #include <stdio.h>
 
-void	ft_printf_and_exit(int status, char *format, ...)
+void	error(char *str)
 {
-	va_list	ap;
+	printf("%s\n", str);
+	exit(1);
+}
 
-	va_start(ap, format);
-	vprintf(format, ap);
-	va_end(ap);
-	exit(status);
+void	error_line_msg(long row, char *msg)
+{
+	printf("Error\nin %ld: %s\n", row, msg);
+	exit(1);
 }

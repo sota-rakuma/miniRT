@@ -1,6 +1,9 @@
 #ifndef WORLD_H
 # define WORLD_H
 
+# include "../../libft/libft.h"
+# include <sys/errno.h>
+# include <stdio.h>
 # include "../light/light.h"
 # include "../shape/shape.h"
 # include "../camera/camera.h"
@@ -35,7 +38,7 @@ void	world_parse_cylinder(t_world *world, char **strs, long row);
 // world_parse.c
 void	world_destuctor(t_world *world);
 void	world_parse(t_world *world, int fd);
-void	world_check(t_world *world, const char *file);
+void	world_check(t_world *world);
 
 t_world	*world_init(char *filename);
 

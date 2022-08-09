@@ -2,7 +2,6 @@
 
 double	parse_num(char *str, long row)
 {
-	const char	*original = str;
 	double		integer;
 	double		sign;
 	double		digit;
@@ -29,7 +28,6 @@ double	parse_num(char *str, long row)
 t_vec3d	parse_vec3d(char *str, long row)
 {
 	char	**strs;
-	long	len;
 	t_vec3d	vec;
 
 	if (!check_num_of_elements(str))
@@ -45,7 +43,6 @@ t_vec3d	parse_vec3d(char *str, long row)
 t_color	parse_color(char *str, long row)
 {
 	char	**strs;
-	long	len;
 	t_color	color;
 
 	if (!check_num_of_elements(str))

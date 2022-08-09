@@ -1,10 +1,10 @@
 #include "../minirt.h"
 
 t_shape	*compute_intersected_shape(t_world *world, t_vec3d to_screen);
-t_color	compute_ambient_light(t_world *world, t_shape *shape, t_light *light);
+t_color	compute_ambient_light(t_shape *shape, t_light *light);
 t_vec3d	compute_intersected_pos(
 			t_camera *camera, t_vec3d to_screen, t_shape *shape);
-bool	compute_is_shadow(t_world *world, t_shape *shape, t_light *light,
+bool	compute_is_shadow(t_world *world, t_light *light,
 			t_vec3d intersected_pos);
 void	set_t_compute(t_world *world, t_vec3d to_screen, t_compute *c);
 
@@ -47,7 +47,7 @@ t_color	compute_light(
 	c.light = light;
 	c.intersected_pos = \
 			compute_intersected_pos(world->camera, to_screen, shape);
-	if (compute_is_shadow(world, shape, light, c.intersected_pos))
+	if (compute_is_shadow(world, light, c.intersected_pos))
 		return ((t_color){0.0, 0.0, 0.0});
 	set_t_compute(world, to_screen, &c);
 	color = color_add_color(color, compute_diffuse(&c));
@@ -68,7 +68,7 @@ t_color	compute_brightness(t_world *world, t_vec3d to_screen, t_shape *shape)
 	while (now_light)
 	{
 		if (now_light->kind == AMBIENT_LIGHT)
-			add_intensity = compute_ambient_light(world, shape, now_light);
+			add_intensity = compute_ambient_light(shape, now_light);
 		if (now_light->kind == LIGHT)
 			add_intensity = compute_light(world, to_screen, shape, now_light);
 		intensity = color_add_color(intensity, add_intensity);
@@ -79,11 +79,9 @@ t_color	compute_brightness(t_world *world, t_vec3d to_screen, t_shape *shape)
 
 t_color	compute_color_of_pixel(t_world *world, t_vec3d to_screen)
 {
-	t_vec3d	o_to_screen;
 	t_shape	*intersected_shape;
 	t_color	color;
 
-	o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
 	intersected_shape = compute_intersected_shape(world, to_screen);
 	if (intersected_shape == NULL)
 		return (world->bg);

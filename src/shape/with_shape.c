@@ -44,8 +44,6 @@ t_abc	equation_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 	const t_vec3d	d_cross_v = vec3d_cross(o_to_screen, shape->normal);
 	const t_vec3d	o_cross_v = vec3d_cross(o, shape->normal);
 	const t_vec3d	c_cross_v = vec3d_cross(shape->center, shape->normal);
-	const double	max_length = sqrt(
-		pow(shape->height / 2, 2) + pow(shape->radius, 2));
 
 	return ((t_abc){
 		vec3d_dot(d_cross_v, d_cross_v),

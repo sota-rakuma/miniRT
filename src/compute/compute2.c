@@ -26,7 +26,7 @@ t_shape	*compute_intersected_shape(t_world *world, t_vec3d to_screen)
 	return (intersected_shape);
 }
 
-t_color	compute_ambient_light(t_world *world, t_shape *shape, t_light *light)
+t_color	compute_ambient_light(t_shape *shape, t_light *light)
 {
 	t_color	ia;
 	t_color	radience_amb;
@@ -49,8 +49,8 @@ t_vec3d	compute_intersected_pos(
 	return (pos);
 }
 
-bool	compute_is_shadow(t_world *world, t_shape *shape, t_light *light,
-					   t_vec3d intersected_pos)
+bool	compute_is_shadow(t_world *world, t_light *light,
+					t_vec3d intersected_pos)
 {
 	t_shape	*now_shape;
 	t_vec3d	int_to_light_dir;

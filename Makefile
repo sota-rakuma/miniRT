@@ -1,5 +1,5 @@
 CC:=cc
-# CFLAGS:=-O2#-Wall -Wextra -Werror
+CFLAGS:=-Wall -Wextra -Werror
 NAME:=miniRT
 
 SRC := \

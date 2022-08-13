@@ -1,8 +1,8 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-# define WIDTH 200
-# define HEIGHT 200
+# define WIDTH 600
+# define HEIGHT 600
 
 # include <math.h>
 # include <stdio.h>

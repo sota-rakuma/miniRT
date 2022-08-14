@@ -23,6 +23,8 @@ SRC := \
 	src/util/ft_xalloc.c \
 	src/util/strs_len.c \
 	src/util/usage.c \
+	src/util/is_number.c \
+	src/util/is_float.c \
 	src/vec3d/vec3d_camera.c \
 	src/vec3d/vec3d_camera_to_screen.c \
 	src/vec3d/vec3d_sp_center.c \

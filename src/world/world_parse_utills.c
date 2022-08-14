@@ -32,28 +32,20 @@ bool	check_comma_cnt(char *str)
 	return (cnt == 2);
 }
 
-bool	check_num_cnt(char **strs)
+bool	check_elements(char **strs, t_check kind)
 {
 	const size_t	size = strs_len(strs);
-	size_t			len;
 	size_t			i;
-	size_t			j;
 
 	if (size != 3)
 		return (false);
 	i = 0;
 	while (i < size)
 	{
-		j = 0;
-		len = ft_strlen(strs[i]);
-		if (len == 0)
+		if (kind == INTEGER && !is_number(strs[i]))
 			return (false);
-		if ((strs[i][j] == '+' || strs[i][j] == '-')
-			&& ft_isdigit(strs[i][j + 1]))
-			j++;
-		while (j < len)
-			if (!ft_isdigit(strs[i][j++]))
-				return (false);
+		else if (kind == FLOAT && !is_float(strs[i]))
+			return (false);
 		i++;
 	}
 	return (true);

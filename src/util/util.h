@@ -6,7 +6,7 @@
 /*   By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 10:42:13 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/09 00:02:56 by srakuma          ###   ########.fr       */
+/*   Updated: 2022/08/14 17:32:30 by srakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@ long	strs_len(char **strs);
 void	*ft_xalloc(size_t count, size_t size, const char *func_name);
 void	free_all(char **strs);
 void	usage(void);
+bool	is_number(char *str);
+bool	is_float(char *str);
 
 #endif

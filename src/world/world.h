@@ -17,13 +17,19 @@ typedef struct s_world {
 	t_color		bg;
 }				t_world;
 
+typedef enum e_check
+{
+	INTEGER,
+	FLOAT
+}	t_check;
+
 // world_add.c
 void	world_add_light(t_world *world, t_light *light);
 void	world_add_shape(t_world *world, t_shape *shape);
 
 bool	check_in_range(double val[], size_t len, double max, double min);
 bool	check_comma_cnt(char *str);
-bool	check_num_cnt(char **strs);
+bool	check_elements(char **strs, t_check kind);
 bool	check_filename(char *filename);
 
 double	parse_num(char *str, long row);

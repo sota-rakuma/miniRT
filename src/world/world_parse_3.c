@@ -22,7 +22,7 @@ void	world_parse_light(t_world *world, char **strs, long row)
 	t_light		*light;
 
 	if (len != 3 && len != 4)
-		error_line_msg(row, "wrnog number of elements");
+		error_line_msg(row, "wrong number of elements");
 	light = (t_light *)ft_xalloc(sizeof(t_light), 1, __func__);
 	light->kind = LIGHT;
 	light->pos = parse_vec3d(strs[1], row);
@@ -51,8 +51,8 @@ void	world_parse_camera(t_world *world, char **strs, long row)
 	camera->pos = parse_vec3d(strs[1], row);
 	camera->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){camera->normal.x, camera->normal.y, camera->normal.z};
-	if (!check_in_range(tmp, 3, 1.0, -1.0))
-		error_line_msg(row, "normal is out of range");
+	if (!check_in_range(tmp, 3, 1.0, -1.0) || vec3d_length(camera->normal) == 0)
+		error_line_msg(row, "normal has wrong vector");
 	camera->fov = parse_num(strs[3], row);
 	if (camera->fov < 0.0 || 180.0 < camera->fov)
 		error_line_msg(row, "fov is out of range");

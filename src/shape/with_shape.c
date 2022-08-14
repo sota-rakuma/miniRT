@@ -60,7 +60,7 @@ double	get_t_with_cylinder(
 	t_vec3d o_to_screen, t_vec3d o, t_shape *shape, t_abc abc)
 {
 	const double	max_length = sqrt(
-		pow(shape->height / 2, 2) + pow(shape->radius, 2));
+		pow(shape->height / 2.0, 2) + pow(shape->radius, 2));
 	const double	discriminant = abc.b * abc.b - 4.0 * abc.a * abc.c;
 	t_vec3d			c_to_point;
 	double			t1;
@@ -97,7 +97,7 @@ double	with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 	const double	discriminant = abc.b * abc.b - 4.0 * abc.a * abc.c;
 
 	if (discriminant < 0.0)
-		return (-1);
+		return (-1.0);
 	else
 		return (get_t_with_cylinder(o_to_screen, o, shape, abc));
 }

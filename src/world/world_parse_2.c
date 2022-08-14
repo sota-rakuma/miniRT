@@ -32,8 +32,9 @@ void	world_parse_plane(t_world *world, char **strs, long row)
 	shape->point = parse_vec3d(strs[1], row);
 	shape->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){shape->normal.x, shape->normal.y, shape->normal.z};
-	if (!check_in_range(tmp, 3, 1.0, -1.0))
-		error_line_msg(row, "normal is out of range");
+	if (!check_in_range(tmp, 3, 1.0, -1.0) || vec3d_length(shape->normal) == 0)
+		error_line_msg(row, "normal has wrong vector");
+	shape->normal = vec3d_unit(shape->normal);
 	shape->color = parse_color(strs[3], row);
 	shape->ka = color_mult_num(shape->color, 1.0 / 255.0);
 	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);
@@ -54,8 +55,8 @@ void	world_parse_cylinder(t_world *world, char **strs, long row)
 	shape->kind = CYLINDER;
 	shape->normal = parse_vec3d(strs[2], row);
 	tmp = (double []){shape->normal.x, shape->normal.y, shape->normal.z};
-	if (!check_in_range(tmp, 3, 1.0, -1.0))
-		error_line_msg(row, "normal is out of range");
+	if (!check_in_range(tmp, 3, 1.0, -1.0) || vec3d_length(shape->normal) == 0)
+		error_line_msg(row, "normal has wrong vector");
 	shape->normal = vec3d_unit(shape->normal);
 	shape->radius = parse_num(strs[3], row) / 2.0;
 	shape->height = parse_num(strs[4], row);

@@ -25,7 +25,7 @@ void	world_parse_plane(t_world *world, char **strs, long row)
 	double		*tmp;
 	t_shape		*shape;
 
-	if (len != 4 && (len != 5 || ft_strcmp(strs[4], "mirror")))
+	if (len != 4)
 		error_line_msg(row, "wrong number of elements");
 	shape = (t_shape *)ft_xalloc(sizeof(t_shape), 1, __func__);
 	shape->kind = PLANE;
@@ -39,8 +39,6 @@ void	world_parse_plane(t_world *world, char **strs, long row)
 	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);
 	shape->ks = (t_color){0.3, 0.3, 0.3};
 	shape->shininess = 16.0;
-	if (len == 5)
-		shape->is_mirror = true;
 	world_add_shape(world, shape);
 }
 

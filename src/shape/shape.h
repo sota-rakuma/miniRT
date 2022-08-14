@@ -6,7 +6,7 @@
 /*   By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 10:44:17 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/09 00:00:33 by srakuma          ###   ########.fr       */
+/*   Updated: 2022/08/13 19:39:12 by srakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_shape {
 	double			radius;
 	t_vec3d			normal;
 	t_vec3d			point;
-	bool			is_mirror;
 	double			height;
 }	t_shape;
 

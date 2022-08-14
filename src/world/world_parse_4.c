@@ -30,9 +30,9 @@ t_vec3d	parse_vec3d(char *str, long row)
 	char	**strs;
 	t_vec3d	vec;
 
-	if (!check_num_of_elements(str))
-		error_line_msg(row, "vector has wrong number of elements");
 	strs = ft_split(str, ',');
+	if (!check_comma_cnt(str) || !check_num_cnt(strs))
+		error_line_msg(row, "vector has wrong elements");
 	vec.x = parse_num(strs[0], row);
 	vec.y = parse_num(strs[1], row);
 	vec.z = parse_num(strs[2], row);
@@ -45,9 +45,9 @@ t_color	parse_color(char *str, long row)
 	char	**strs;
 	t_color	color;
 
-	if (!check_num_of_elements(str))
-		error_line_msg(row, "color has wrong number of elements");
 	strs = ft_split(str, ',');
+	if (!check_comma_cnt(str) || !check_num_cnt(strs))
+		error_line_msg(row, "color has wrong elements");
 	color.r = parse_num(strs[0], row);
 	color.g = parse_num(strs[1], row);
 	color.b = parse_num(strs[2], row);

@@ -22,7 +22,8 @@ void	world_add_light(t_world *world, t_light *light);
 void	world_add_shape(t_world *world, t_shape *shape);
 
 bool	check_in_range(double val[], size_t len, double max, double min);
-bool	check_num_of_elements(char *str);
+bool	check_comma_cnt(char *str);
+bool	check_num_cnt(char **strs);
 bool	check_filename(char *filename);
 
 double	parse_num(char *str, long row);

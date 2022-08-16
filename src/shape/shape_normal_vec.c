@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shape_normal_vec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: srakuma <srakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: rnishimo <rnishimo@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 10:43:27 by rnishimo          #+#    #+#             */
-/*   Updated: 2022/08/09 20:28:07 by srakuma          ###   ########.fr       */
+/*   Updated: 2022/08/16 14:32:18 by rnishimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ t_vec3d	shape_normal_vec(t_shape *shape, t_vec3d pos)
 		normal = vec3d_cross(vec3d_sub(pos, shape->center),
 				shape->normal);
 		normal = vec3d_cross(shape->normal, normal);
+		if (vec3d_length(normal) == 0.0)
+			normal = shape->normal;
 	}
 	return (vec3d_unit(normal));
 }

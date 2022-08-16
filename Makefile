@@ -107,10 +107,8 @@ norm_file:
 	norminette src libft | grep Error! || echo ok
 
 norm:
-	@norminette src/*.c src/*/*.c libft/*.c libft/*/*.c  \
+	@norminette src libft  \
 		| grep Error \
-		| grep -v "TOO_MANY_FUNC" \
-		| grep -v "WRONG_SCOPE_COMMENT" \
 		|| echo ok
 
 ok:

@@ -38,7 +38,7 @@ void	world_parse(t_world *world, int fd)
 		line = get_next_line(fd);
 		if (line == NULL)
 			break ;
-		else if (line[0] != '\0')
+		else if (line[0] != '\0' && line[0] != '#')
 			world_parse_line(world, line, row);
 		free(line);
 		row++;

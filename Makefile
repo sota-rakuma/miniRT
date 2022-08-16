@@ -113,4 +113,10 @@ norm:
 		| grep -v "WRONG_SCOPE_COMMENT" \
 		|| echo ok
 
+ok:
+	cd .test && cat test.sh ok.sh > tmp.sh && bash tmp.sh
+
+ng:
+	cd .test && cat test.sh ng.sh > tmp.sh && bash tmp.sh
+
 .PHONY: all clean fclean re

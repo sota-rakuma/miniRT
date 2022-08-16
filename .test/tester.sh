@@ -8,17 +8,16 @@ function TEST() {
   expected="$1"
   rtfile="$2"
 
+  echo -n "${rtfile}: " 
   echo "$rtfile" "================" >> test.log
   ../miniRT "${rtfile}" 2>>test.log >>test.log
   result="$?"
   echo >> test.log
 
   if [ "$result" = "$expected" ]; then
-    echo -n -e "${GREEN}OK: ${NC}"
-    echo "$rtfile"
+    echo -e "${GREEN}OK${NC}"
   else
-    echo -n -e "${RED}KO: ${NC}"
-    echo "$rtfile"
+    echo -e "${RED}KO${NC}"
   fi
 }
 

@@ -76,8 +76,11 @@ bool	compute_is_shadow(t_world *world, t_light *light,
 void	set_t_compute(t_world *world, t_vec3d to_screen, t_compute *c)
 {
 	c->o_to_screen = vec3d_camera_to_screen(world->camera, to_screen);
-	c->pos_to_light_dir = \
-		vec3d_unit(vec3d_sub(c->light->pos, c->intersected_pos));
+	c->pos_to_light_dir = vec3d_sub(c->light->pos, c->intersected_pos);
+	if (vec3d_length(c->pos_to_light_dir) == 0)
+		c->pos_to_light_dir = (t_vec3d){0, 0, 0};
+	else
+		c->pos_to_light_dir = vec3d_unit(c->pos_to_light_dir);
 	c->intersected_pos_normal = shape_normal_vec(c->shape, c->intersected_pos);
 	c->reverse_eye_dir = vec3d_unit(vec3d_mult(c->o_to_screen, -1.0));
 	if (vec3d_dot(c->reverse_eye_dir, c->intersected_pos_normal) <= 0.0)

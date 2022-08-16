@@ -14,7 +14,7 @@ t_shape	*compute_intersected_shape(t_world *world, t_vec3d to_screen)
 	now_shape = world->shape_list;
 	while (now_shape)
 	{
-		t = shape_get_intersection(
+		t = (float)shape_get_intersection(
 				camera_to_screen, vec3d_camera(world->camera), now_shape);
 		if (t >= 1.0 && (intersected_shape == NULL || minimum_t > t))
 		{

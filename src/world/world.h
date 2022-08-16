@@ -33,6 +33,7 @@ bool	check_elements(char **strs, t_check kind);
 bool	check_filename(char *filename);
 
 double	parse_num(char *str, long row);
+double	parse_positive_num(char *str, long row);
 t_vec3d	parse_vec3d(char *str, long row);
 t_color	parse_color(char *str, long row);
 void	world_parse_ambient_light(t_world *world, char **strs, long row);

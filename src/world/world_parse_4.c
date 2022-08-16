@@ -25,6 +25,21 @@ double	parse_num(char *str, long row)
 	return (sign * integer);
 }
 
+double	parse_positive_num(char *str, long row)
+{
+	double	num;
+	char	buf[1024];
+
+	num = parse_num(str, row);
+	if (num <= 0.0)
+	{
+		ft_strlcpy(buf, str, 1024);
+		ft_strlcat(buf, " is not positive number", 1024);
+		error_line_msg(row, buf);
+	}
+	return (num);
+}
+
 t_vec3d	parse_vec3d(char *str, long row)
 {
 	char	**strs;

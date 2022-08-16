@@ -107,9 +107,7 @@ norm_file:
 	norminette src libft | grep Error! || echo ok
 
 norm:
-	@norminette src libft  \
-		| grep Error \
-		|| echo ok
+	norminette src libft | grep Error || echo ok
 
 ok:
 	cd .test && cat tester.sh ok.sh > tmp.sh && bash tmp.sh

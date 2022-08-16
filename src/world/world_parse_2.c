@@ -21,7 +21,6 @@ void	world_parse_sphere(t_world *world, char **strs, long row)
 	shape->kind = SPHERE;
 	shape->center = parse_vec3d(strs[1], row);
 	shape->radius = parse_diameter(strs[2], row);
-	printf("shape->radius: %.10f\n", shape->radius);
 	shape->color = parse_color(strs[3], row);
 	shape->ka = color_mult_num(shape->color, 1.0 / 255.0);
 	shape->kd = color_mult_num(shape->color, 1.0 / 255.0 * 0.69);

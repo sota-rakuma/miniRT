@@ -71,7 +71,7 @@ double	get_t_with_cylinder(
 	t1 = (-abc.b - sqrt(discriminant)) / (2 * abc.a);
 	c_to_point = vec3d_sub(
 			vec3d_add(o, vec3d_mult(o_to_screen, t1)), shape->center);
-	if (vec3d_length(c_to_point) > max_length)
+	if ((float)vec3d_length(c_to_point) > max_length)
 		t1 = -1;
 	t2 = (-abc.b + sqrt(discriminant)) / (2 * abc.a);
 	c_to_point = vec3d_sub(

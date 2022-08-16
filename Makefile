@@ -119,4 +119,10 @@ ok:
 ng:
 	cd .test && cat test.sh ng.sh > tmp.sh && bash tmp.sh
 
+ok_bonus:
+	cd .test && cat test.sh ok_bonus.sh > tmp.sh && bash tmp.sh
+
+ng_bonus:
+	cd .test && cat test.sh ng_bonus.sh > tmp.sh && bash tmp.sh
+
 .PHONY: all clean fclean re

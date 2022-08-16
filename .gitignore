@@ -10,3 +10,4 @@ obj
 miniRT
 rtfiles*
 *.log
+test.sh

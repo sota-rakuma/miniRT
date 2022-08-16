@@ -19,6 +19,8 @@ double	with_sphere(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 	};
 	const double	discriminant = eq.b * eq.b - 4 * eq.a * eq.c;
 
+	if (shape->radius < 0.0001)
+		return (-1.0);
 	if (discriminant == 0)
 		return (-eq.b / (2 * eq.a));
 	t1 = (-eq.b - sqrt(discriminant)) / (2 * eq.a);
@@ -96,6 +98,8 @@ double	with_cylinder(t_vec3d o_to_screen, t_vec3d o, t_shape *shape)
 	const t_abc		abc = equation_cylinder(o_to_screen, o, shape);
 	const double	discriminant = abc.b * abc.b - 4.0 * abc.a * abc.c;
 
+	if (shape->radius < 0.0001)
+		return (-1.0);
 	if (discriminant < 0.0)
 		return (-1.0);
 	else
